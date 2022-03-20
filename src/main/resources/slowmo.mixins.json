@@ -1,0 +1,25 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.themegax.slowmo.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "MinecraftServerMixin",
+    "PlayerEntityMixin",
+    "ServerWorldAccessor",
+    "ServerWorldMixin",
+    "WorldAccessor"
+  ],
+  "client": [
+    "client.ClientWorldMixin",
+    "client.GameRendererMixin",
+    "client.LivingEntityRendererMixin",
+    "client.MinecraftClientAccessor",
+    "client.MinecraftClientMixin",
+    "client.SoundSystemMixin",
+    "client.WorldRendererMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "id": "slowmo-lib",
+  "version": "${version}",
+
+  "name": "SlowMo Lib",
+  "description": "Library for controlling time",
+  "authors": [
+    "TheMegax"
+  ],
+  "contact": {
+    "homepage": "https://fabricmc.net/",
+    "sources": "https://github.com/FabricMC/fabric-example-mod"
+  },
+
+  "license": "CC0-1.0",
+  "icon": "assets/slowmo/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "net.themegax.slowmo.SlowmoMain"
+    ],
+    "client": [
+      "net.themegax.slowmo.SlowmoClient"
+    ]
+  },
+  "mixins": [
+    "slowmo.mixins.json"
+  ],
+  "accessWidener" : "slowmo.accesswidener",
+  "depends": {
+    "fabricloader": ">=0.13.3",
+    "fabric": "*",
+    "minecraft": "1.18.x",
+    "java": ">=17"
+  },
+  "suggests": {
+
+  }
+}

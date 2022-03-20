@@ -1,0 +1,5 @@
+{
+  "command.slowmo.reset": "Reset all ticks",
+  "command.slowmo.changed_ticks": "Changed tickspeed",
+  "gamerule.worldTickspeed": "World Tick Speed"
+}
