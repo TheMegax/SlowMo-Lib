@@ -1,84 +1,54 @@
 package net.themegax.slowmo.mixin.client;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.util.Util;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import static net.themegax.slowmo.ClientTick.renderTick;
 import static net.themegax.slowmo.SlowmoClient.MAX_CLIENT_TICKS;
 import static net.themegax.slowmo.SlowmoClient.playerTickCounter;
 
 @Mixin(MinecraftClient.class)
 public abstract class MinecraftClientMixin {
 
-    float pausedTickDelta = 0;
-    boolean paused = false;
-    boolean pausedCondition = false;
-
     @ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/GameRenderer;render(FJZ)V"))
     private float tickDelta(float f) {
+        MinecraftClient client = MinecraftClient.getInstance();
+        if (client.isPaused()) {
+            return ((MinecraftClientAccessor) client).getPausedTickDelta();
+        }
         return playerTickCounter.tickDelta;
     }
 
-    @ModifyVariable(method = "render", at = @At(value = "STORE"), ordinal = 1)
-    private boolean paused(boolean bl) {
-        pausedCondition = bl;
-        return bl;
+    @Redirect(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;handleInputEvents()V"), remap = false)
+    private void ignoreInputCall(MinecraftClient instance) { } // Will ignore handleInputEvents call
+
+    @Inject(method = "tick", at = @At("HEAD"))
+    private void cooldownModify(CallbackInfo ci) { // Nullifies cooldown tickdown from tick() call
+        MinecraftClient client = MinecraftClient.getInstance();
+        int itemUseCooldown = ((MinecraftClientAccessor) client).getItemUseCooldown();
+        if (itemUseCooldown > 0) {
+            ((MinecraftClientAccessor) client).setItemUseCooldown(itemUseCooldown + 1);
+        }
+        int attackCooldown = ((MinecraftClientAccessor) client).getAttackCooldown();
+        if (attackCooldown > 0) {
+            ((MinecraftClientAccessor) client).setAttackCooldown(attackCooldown + 1);
+        }
     }
+
 
     // Player tick render
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/RenderTickCounter;beginRenderTick(J)I"))
     private void render(boolean tick, CallbackInfo ci) {
-        MinecraftClient minecraftClient = MinecraftClient.getInstance();
-        MinecraftClientAccessor minecraftClientAccessor = ((MinecraftClientAccessor) minecraftClient);
+        MinecraftClient client = MinecraftClient.getInstance();
         long timeMillis = Util.getMeasuringTimeMs();
         int i = playerTickCounter.beginRenderTick(timeMillis);
-        if (!paused) {
-            ClientPlayerEntity clientPlayer = minecraftClient.player;
-            if (clientPlayer != null) {
-                for (int j = 0; j < Math.min(MAX_CLIENT_TICKS, i); ++j) {
-                    clientPlayer.resetPosition();
-                    clientPlayer.age++;
-                    clientPlayer.tick();
-
-                    // If a tick is scheduled to run, don't double tick
-                    RenderTickCounter renderTickCounter = ((MinecraftClientAccessor)minecraftClient).getRenderTickCounter();
-                    float prevTimeMillis = renderTickCounter.prevTimeMillis;
-                    float lastFrameDuration = (timeMillis - prevTimeMillis) / renderTickCounter.tickTime;
-                    int k = (int) (renderTickCounter.tickDelta + lastFrameDuration);
-                    if (k < 1) { // TODO this is much faster than it needs to be!
-                        int itemUseCooldown = ((MinecraftClientAccessor) minecraftClient).getItemUseCooldown();
-                        if (itemUseCooldown > 0) {
-                            ((MinecraftClientAccessor) minecraftClient).setItemUseCooldown(itemUseCooldown-1);
-                        }
-                        minecraftClient.getMusicTracker().tick();
-                        if (minecraftClient.interactionManager != null)
-                            minecraftClient.interactionManager.tick();
-                        minecraftClient.inGameHud.tick(false);
-                        minecraftClient.gameRenderer.tick();
-                        minecraftClient.particleManager.tick();
-                        if (minecraftClientAccessor.getOverlay() == null && (minecraftClient.currentScreen == null || minecraftClient.currentScreen.passEvents)) {
-                            minecraftClientAccessor.invokeHandleInputEvents();
-                            int attackCooldown = ((MinecraftClientAccessor) minecraftClient).getAttackCooldown();
-                            if (attackCooldown > 0) {
-                                ((MinecraftClientAccessor) minecraftClient).setAttackCooldown(attackCooldown-1);
-                            }
-                        }
-                    }
-                }
+        if (!client.isPaused()) {
+            for (int j = 0; j < Math.min(MAX_CLIENT_TICKS, i); ++j) {
+                renderTick(client);
             }
-        }
-        //FIXME paused behavior doesn't work properly
-        if (paused != pausedCondition) {
-            if (paused) {
-                pausedTickDelta = playerTickCounter.tickDelta;
-            } else {
-                playerTickCounter.tickDelta = pausedTickDelta;
-            }
-            paused = pausedCondition;
         }
     }
 

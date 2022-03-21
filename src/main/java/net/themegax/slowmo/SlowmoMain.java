@@ -56,13 +56,13 @@ public class SlowmoMain implements ModInitializer {
 		ServerEntityEvents.ENTITY_LOAD.register(this::onEntityLoad);
 
 		//TODO LIST:
-		// - Fix client double ticking
+		// - Better client tick desync handling in ClientTick
 		// - Fix pause menu
-		// - Fix thrown potions not rendering when too close
 		// - Eating speed, bow draw speed (etc) should all follow client tick speed
-		// - Broken CLIENT TPS LOGIN RENDER
+		// - Fix thrown potions not rendering when too close
 		// - Fix item cooldown render
 		// - Suggestion Provider
+
 		LOGGER.info("SlowMo Lib Initialized");
 	}
 
@@ -70,6 +70,10 @@ public class SlowmoMain implements ModInitializer {
 		if (entity.isPlayer()) {
 			float PLAYER_TICKS_PER_SECOND = ((PlayerEntityExt)entity).getPlayerTicks();
 			updateClientTickrate(PLAYER_TICKS_PER_SECOND, (ServerPlayerEntity) entity);
+
+			PacketByteBuf buf = PacketByteBufs.create();
+			buf.writeFloat(TICKS_PER_SECOND);
+			ServerPlayNetworking.send((ServerPlayerEntity) entity, SERVER_TICKRATE_PACKET_ID, buf);
 		}
 	}
 
@@ -95,7 +99,6 @@ public class SlowmoMain implements ModInitializer {
 		buf.writeFloat(f);
 
 		for (ServerPlayerEntity player : PlayerLookup.all(minecraftServer)) {
-			((PlayerEntityExt)player).setPlayerTicks(f);
 			ServerPlayNetworking.send(player, SERVER_TICKRATE_PACKET_ID, buf);
 		}
 
@@ -106,6 +109,7 @@ public class SlowmoMain implements ModInitializer {
 		PacketByteBuf buf = PacketByteBufs.create();
 		buf.writeFloat(f);
 
+		((PlayerEntityExt)player).setPlayerTicks(f);
 		ServerPlayNetworking.send(player, TICKRATE_PACKET_ID, buf);
 	}
 }

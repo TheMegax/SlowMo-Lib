@@ -11,6 +11,8 @@
     "WorldAccessor"
   ],
   "client": [
+    "client.ClientPlayerInteractionManagerAccessor",
+    "client.ClientPlayerInteractionManagerMixin",
     "client.ClientWorldMixin",
     "client.GameRendererMixin",
     "client.LivingEntityRendererMixin",
