@@ -45,6 +45,11 @@ public abstract class MinecraftClientMixin {
         MinecraftClient client = MinecraftClient.getInstance();
         long timeMillis = Util.getMeasuringTimeMs();
         int i = playerTickCounter.beginRenderTick(timeMillis);
+
+        if (client.player != null) {
+            MinecraftClientAccessor minecraftClientAccessor = ((MinecraftClientAccessor) client);
+            minecraftClientAccessor.invokeHandleInputEvents(); // Fixes input at very low tickrate
+        }
         if (!client.isPaused()) {
             for (int j = 0; j < Math.min(MAX_CLIENT_TICKS, i); ++j) {
                 renderTick(client);
@@ -56,5 +61,11 @@ public abstract class MinecraftClientMixin {
     @ModifyConstant(method = "render", constant = @Constant(intValue = 10))
     private int tickLimit(int i) {
         return MAX_CLIENT_TICKS;
+    }
+
+    // Cancels call to handleBlockBreaking from handleInputEvents
+    @Inject(method = "handleInputEvents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;handleBlockBreaking(Z)V"), cancellable = true)
+    private void cancelBlockBreakingHandler(CallbackInfo ci) {
+        ci.cancel();
     }
 }

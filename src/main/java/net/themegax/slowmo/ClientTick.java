@@ -30,6 +30,7 @@ public class ClientTick {
         client.getTutorialManager().tick(client.world, client.crosshairTarget);
         profiler.push("gameMode");
         if (client.world != null) {
+            assert client.interactionManager != null;
             ((ClientPlayerInteractionManagerExt)client.interactionManager).desyncTick();
         }
         profiler.swap("textures");
@@ -44,8 +45,8 @@ public class ClientTick {
             }
         } else {
             Screen screen = client.currentScreen;
-            if (screen instanceof SleepingChatScreen) {
-                SleepingChatScreen sleepingChatScreen = (SleepingChatScreen)screen;
+            if (screen instanceof SleepingChatScreen sleepingChatScreen) {
+                assert client.player != null;
                 if (!client.player.isSleeping()) {
                     sleepingChatScreen.closeChatIfEmpty();
                 }
@@ -63,7 +64,8 @@ public class ClientTick {
         }
 
         if (minecraftClientAccessor.getOverlay() == null && (client.currentScreen == null || client.currentScreen.passEvents)) {
-            minecraftClientAccessor.invokeHandleInputEvents();
+            minecraftClientAccessor.invokeHandleBlockBreaking(client.currentScreen == null && client.options.attackKey.isPressed() && client.mouse.isCursorLocked());
+
             int attackCooldown = ((MinecraftClientAccessor) client).getAttackCooldown();
             if (attackCooldown > 0) {
                 ((MinecraftClientAccessor) client).setAttackCooldown(attackCooldown - 1);

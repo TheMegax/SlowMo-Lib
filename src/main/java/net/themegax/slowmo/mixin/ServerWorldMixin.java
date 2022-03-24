@@ -97,5 +97,6 @@ public abstract class ServerWorldMixin extends World {
             }
         }
         serverWorld.tickEntity(serverWorld::tickEntity, entity);
+        entity.baseTick();
     }
 }

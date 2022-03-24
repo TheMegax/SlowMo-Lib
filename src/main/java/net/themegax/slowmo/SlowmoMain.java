@@ -47,8 +47,6 @@ public class SlowmoMain implements ModInitializer {
 					GameRules.Category.MISC,
 					GameRuleFactory.createDoubleRule(DEFAULT_TICKRATE));
 
-	//boolean isDevelopmentEnvironment = FabricLoader.getInstance().isDevelopmentEnvironment();
-
 	@Override
 	public void onInitialize() {
 		CommandRegistry.init();
@@ -57,10 +55,11 @@ public class SlowmoMain implements ModInitializer {
 
 		//TODO LIST:
 		// - Better client tick desync handling in ClientTick
-		// - Fix pause menu
-		// - Eating speed, bow draw speed (etc) should all follow client tick speed
-		// - Fix thrown potions not rendering when too close
 		// - Fix item cooldown render
+		// - Fix FOV smoothing
+		// - Particles spawn too frecuently
+		// - Potion timer should follow server
+		// - Fix thrown potions not rendering when too close
 		// - Suggestion Provider
 
 		LOGGER.info("SlowMo Lib Initialized");

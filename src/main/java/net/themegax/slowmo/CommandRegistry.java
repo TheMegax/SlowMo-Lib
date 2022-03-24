@@ -54,13 +54,6 @@ public class CommandRegistry {
                             return 1;
                         }))
                 .then(argument("ticks per second", FloatArgumentType.floatArg(MIN_TICKRATE, MAX_TICKRATE))
-                        .executes(ctx -> { // Affects only current player
-                            float tps = FloatArgumentType.getFloat(ctx, "ticks per second");
-                            updateClientTickrate(tps, ctx.getSource().getPlayer());
-                            ctx.getSource().sendFeedback(new TranslatableText("command.slowmo.changed_ticks"), true);
-                            return 1;
-                        }))
-                .then(argument("ticks per second", FloatArgumentType.floatArg(MIN_TICKRATE, MAX_TICKRATE))
                         .then(literal("all")
                                 .executes(ctx -> { // Affects everyone and the server
                                     float tps = FloatArgumentType.getFloat(ctx, "ticks per second");

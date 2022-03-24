@@ -4,8 +4,10 @@
   "package": "net.themegax.slowmo.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "LivingEntityMixin",
     "MinecraftServerMixin",
     "PlayerEntityMixin",
+    "ServerPlayNetworkHandlerMixin",
     "ServerWorldAccessor",
     "ServerWorldMixin",
     "WorldAccessor"
