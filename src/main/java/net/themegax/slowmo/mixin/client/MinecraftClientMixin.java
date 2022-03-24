@@ -1,6 +1,8 @@
 package net.themegax.slowmo.mixin.client;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.particle.ParticleManager;
+import net.minecraft.client.render.GameRenderer;
 import net.minecraft.util.Util;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.*;
@@ -22,8 +24,17 @@ public abstract class MinecraftClientMixin {
         return playerTickCounter.tickDelta;
     }
 
-    @Redirect(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;handleInputEvents()V"), remap = false)
-    private void ignoreInputCall(MinecraftClient instance) { } // Will ignore handleInputEvents call
+    @Redirect(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;handleInputEvents()V"))
+    private void ignoreInputCall(MinecraftClient instance) { } // Ignores handleInputEvents call from tick
+
+    @Redirect(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/GameRenderer;tick()V"))
+    private void ignoreGameRendererTick(GameRenderer instance) { } // Ignores GameRenderer.tick call from tick
+
+    @Redirect(method = "handleInputEvents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;handleBlockBreaking(Z)V"))
+    private void ignoreBlockBreakingHandler(MinecraftClient instance, boolean bl) { } // Ignores handleBlockBreaking call from handleInputEvents
+
+    @Redirect(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/particle/ParticleManager;tick()V"))
+    private void ignoreParticleManagerTick(ParticleManager instance) {} // Ignores particleManager.tick call from tick
 
     @Inject(method = "tick", at = @At("HEAD"))
     private void cooldownModify(CallbackInfo ci) { // Nullifies cooldown tickdown from tick() call
@@ -37,7 +48,6 @@ public abstract class MinecraftClientMixin {
             ((MinecraftClientAccessor) client).setAttackCooldown(attackCooldown + 1);
         }
     }
-
 
     // Player tick render
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/RenderTickCounter;beginRenderTick(J)I"))
@@ -63,9 +73,4 @@ public abstract class MinecraftClientMixin {
         return MAX_CLIENT_TICKS;
     }
 
-    // Cancels call to handleBlockBreaking from handleInputEvents
-    @Inject(method = "handleInputEvents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;handleBlockBreaking(Z)V"), cancellable = true)
-    private void cancelBlockBreakingHandler(CallbackInfo ci) {
-        ci.cancel();
-    }
 }

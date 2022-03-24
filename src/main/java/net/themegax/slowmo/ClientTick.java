@@ -83,6 +83,10 @@ public class ClientTick {
             client.gameRenderer.tick();
             client.getMusicTracker().tick();
         }
+
+        profiler.swap("particles");
+        client.particleManager.tick();
+
         client.getSoundManager().tick(false);
         profiler.swap("keyboard");
         client.keyboard.pollDebugCrash();

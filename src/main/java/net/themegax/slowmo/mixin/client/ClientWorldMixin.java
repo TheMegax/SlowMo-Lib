@@ -14,7 +14,7 @@ public abstract class ClientWorldMixin {
     @Inject(method = "tickEntity", at = @At("HEAD"), cancellable = true)
     private void tickEntity(Entity entity, CallbackInfo ci) {
         if (entity instanceof PlayerEntity) {
-            // Clients won't use the normal tick entity loop
+            // Client players won't use the normal tick entity loop
             ci.cancel();
         }
     }

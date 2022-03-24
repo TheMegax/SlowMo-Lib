@@ -55,9 +55,8 @@ public class SlowmoMain implements ModInitializer {
 
 		//TODO LIST:
 		// - Better client tick desync handling in ClientTick
-		// - Fix item cooldown render
-		// - Fix FOV smoothing
-		// - Particles spawn too frecuently
+		// - Client particle spawning smoothing
+		// - Fix item cooldown inconsistency on low server tickrates
 		// - Potion timer should follow server
 		// - Fix thrown potions not rendering when too close
 		// - Suggestion Provider

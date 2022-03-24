@@ -11,6 +11,7 @@ import net.minecraft.util.math.MathHelper;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import static net.themegax.slowmo.SlowmoClient.playerTickCounter;
@@ -34,5 +35,10 @@ public abstract class WorldRendererMixin {
         double f = MathHelper.lerp(tickDelta, entity.lastRenderZ, entity.getZ());
         float g = MathHelper.lerp(tickDelta, entity.prevYaw, entity.getYaw());
         entityRenderDispatcher.render(entity, d - cameraX, e - cameraY, f - cameraZ, g, tickDelta, matrices, vertexConsumers, entityRenderDispatcher.getLight(entity, tickDelta));
+    }
+
+    @ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/particle/ParticleManager;renderParticles(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider$Immediate;Lnet/minecraft/client/render/LightmapTextureManager;Lnet/minecraft/client/render/Camera;F)V"))
+    private float tickDelta(float f) {
+        return playerTickCounter.tickDelta;
     }
 }
