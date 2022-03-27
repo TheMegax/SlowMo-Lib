@@ -9,11 +9,11 @@
     "TheMegax"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "https://github.com/TheMegax/SlowMo-Lib/",
+    "sources": "https://github.com/TheMegax/SlowMo-Lib/"
   },
 
-  "license": "CC0-1.0",
+  "license": "AGPL-3.0",
   "icon": "assets/slowmo/icon.png",
 
   "environment": "*",
@@ -34,8 +34,5 @@
     "fabric": "*",
     "minecraft": "1.18.x",
     "java": ">=17"
-  },
-  "suggests": {
-
   }
 }
