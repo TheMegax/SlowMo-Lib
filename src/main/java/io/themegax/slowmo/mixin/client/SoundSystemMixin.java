@@ -10,7 +10,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static io.themegax.slowmo.SlowmoClient.SOUND_PITCH;
-import static net.minecraft.sound.SoundCategory.MASTER;
 
 @Mixin(SoundSystem.class)
 public abstract class SoundSystemMixin implements SoundSystemExt {
@@ -33,7 +32,7 @@ public abstract class SoundSystemMixin implements SoundSystemExt {
 
     @Inject(method = "getAdjustedPitch", at = @At("HEAD"), cancellable = true)
     private void getAdjustedPitch(SoundInstance sound, CallbackInfoReturnable<Float> cir) {
-        if (sound.getCategory() != MASTER) {
+        if (!sound.getId().getPath().contains("ui")) {
             float pitch = sound.getPitch() * SOUND_PITCH;
             cir.setReturnValue(getAdjustedNewPitch(pitch));
         }

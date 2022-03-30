@@ -7,6 +7,17 @@ Gradle Setup:
 ```groovy
 repositories {
     mavenCentral()
+
+    maven {
+        url 'https://jitpack.io'
+    }
+    maven {
+        url "https://maven.terraformersmc.com/"
+    }
+    maven {
+        url "https://maven.shedaniel.me/"
+    }
+    
 }
 
 dependencies {

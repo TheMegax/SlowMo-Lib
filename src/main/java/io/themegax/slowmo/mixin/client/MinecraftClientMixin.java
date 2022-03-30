@@ -62,7 +62,7 @@ public abstract class MinecraftClientMixin {
             MinecraftClientAccessor minecraftClientAccessor = ((MinecraftClientAccessor) client);
             minecraftClientAccessor.invokeHandleInputEvents(); // Fixes inputs at very low tickrates
 
-            if (CHANGE_SOUND && (SOUND_PITCH != SERVER_TICKS_PER_SECOND/20)) {
+            if (i != 0 && CHANGE_SOUND && (SOUND_PITCH != SERVER_TICKS_PER_SECOND/20)) {
                 float pitchDelta = (float) i/20;
                 float pitchDistance = Math.abs(SERVER_TICKS_PER_SECOND/20 - SOUND_PITCH);
 
@@ -79,9 +79,14 @@ public abstract class MinecraftClientMixin {
 
                 SoundManager clientSoundManager = client.getSoundManager();
                 SoundManagerAccessor managerAccessor = ((SoundManagerAccessor)clientSoundManager);
-
                 SoundSystem soundSystem = managerAccessor.getSoundSystem();
-
+                ((SoundSystemExt)(soundSystem)).updateSoundPitch(SOUND_PITCH);
+            }
+            else if (!CHANGE_SOUND) {
+                SOUND_PITCH = 1f;
+                SoundManager clientSoundManager = client.getSoundManager();
+                SoundManagerAccessor managerAccessor = ((SoundManagerAccessor)clientSoundManager);
+                SoundSystem soundSystem = managerAccessor.getSoundSystem();
                 ((SoundSystemExt)(soundSystem)).updateSoundPitch(SOUND_PITCH);
             }
         }
