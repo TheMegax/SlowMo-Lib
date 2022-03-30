@@ -1,20 +1,21 @@
-package net.themegax.slowmo;
+package io.themegax.slowmo;
 
+import io.themegax.slowmo.mixin.client.MinecraftClientAccessor;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderTickCounter;
-import net.themegax.slowmo.mixin.client.MinecraftClientAccessor;
 
 import static net.minecraft.util.math.MathHelper.clamp;
-import static net.themegax.slowmo.SlowmoMain.*;
+import static io.themegax.slowmo.SlowmoMain.*;
 
 public class SlowmoClient implements ClientModInitializer {
     public static RenderTickCounter playerTickCounter = new RenderTickCounter(20f, 0L);
     public static float CLIENT_TICKS_PER_SECOND = 20;
     public static float SERVER_TICKS_PER_SECOND = 20;
     public static int MAX_CLIENT_TICKS = 100;
+    public static boolean CHANGE_SOUND = true;
 
     @Override
     public void onInitializeClient() {

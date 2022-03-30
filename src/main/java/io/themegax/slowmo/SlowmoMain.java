@@ -1,5 +1,6 @@
-package net.themegax.slowmo;
+package io.themegax.slowmo;
 
+import io.themegax.slowmo.ext.PlayerEntityExt;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -16,7 +17,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.GameRules;
-import net.themegax.slowmo.ext.PlayerEntityExt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,8 +40,6 @@ public class SlowmoMain implements ModInitializer {
 
 	public static int PERMISSION_LEVEL = 2;
 
-	public static boolean CHANGE_SOUND = true;
-
 	public static final GameRules.Key<DoubleRule> WORLD_TICK_SPEED =
 			GameRuleRegistry.register("worldTickspeed",
 					GameRules.Category.MISC,
@@ -56,8 +54,11 @@ public class SlowmoMain implements ModInitializer {
 		//TODO LIST:
 		// - Better client tick desync handling in ClientTick
 		// - Client particle spawning smoothing
+		// - Fix particles not using correct tick delta
+		// - Config file
+		// - Fix pitch only affecting client sounds
 		// - Fix item cooldown inconsistency on low server tickrates
-		// - Potion timer should follow server
+		// - Effect duration timer should follow server
 		// - Fix thrown potions not rendering when too close
 		// - Suggestion Provider
 

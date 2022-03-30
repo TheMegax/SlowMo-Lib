@@ -1,23 +1,29 @@
-package net.themegax.slowmo;
+package io.themegax.slowmo;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import io.themegax.slowmo.ext.PlayerEntityExt;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.TranslatableText;
-import net.themegax.slowmo.ext.PlayerEntityExt;
 
 import java.util.Collection;
 
 import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
-import static net.themegax.slowmo.SlowmoMain.*;
+import static io.themegax.slowmo.SlowmoMain.*;
 
 public class CommandRegistry {
+    static TranslatableText clientText = new TranslatableText("command.slowmo.client");
+    static TranslatableText serverText = new TranslatableText("command.slowmo.server");
+    static TranslatableText allText = new TranslatableText("command.slowmo.all");
+
+
+
     public static void init() {
 
         CommandRegistrationCallback.EVENT.register(
@@ -62,14 +68,14 @@ public class CommandRegistry {
                                         updateClientTickrate(tps, player);
                                     }
                                     updateServerTickrate(tps, ctx.getSource().getServer());
-                                    ctx.getSource().sendFeedback(new TranslatableText("command.slowmo.changed_ticks"), true);
+                                    ctx.getSource().sendFeedback(new TranslatableText("command.slowmo.changed_ticks", allText, tps), true);
                                     return 0;
                                 }))
                         .then(literal("server")
                                 .executes(ctx -> { // Affects only the server
                                     float tps = FloatArgumentType.getFloat(ctx, "ticks per second");
                                     updateServerTickrate(tps, ctx.getSource().getServer());
-                                    ctx.getSource().sendFeedback(new TranslatableText("command.slowmo.changed_ticks"), true);
+                                    ctx.getSource().sendFeedback(new TranslatableText("command.slowmo.changed_ticks", serverText, tps), true);
                                     return 0;
                                 }))
                         .then(literal("player")
@@ -81,7 +87,7 @@ public class CommandRegistry {
                                                 ((PlayerEntityExt)player).setPlayerTicks(tps);
                                                 updateClientTickrate(tps, player);
                                             }
-                                            ctx.getSource().sendFeedback(new TranslatableText("command.slowmo.changed_ticks"), true);
+                                            ctx.getSource().sendFeedback(new TranslatableText("command.slowmo.changed_ticks", clientText, tps), true);
                                             return 0;
                                         })))
                 ));

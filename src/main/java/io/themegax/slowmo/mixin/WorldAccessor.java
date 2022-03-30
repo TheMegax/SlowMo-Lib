@@ -1,4 +1,4 @@
-package net.themegax.slowmo.mixin;
+package io.themegax.slowmo.mixin;
 
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;

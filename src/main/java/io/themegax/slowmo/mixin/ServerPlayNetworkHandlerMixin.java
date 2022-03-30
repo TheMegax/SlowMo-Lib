@@ -1,14 +1,14 @@
-package net.themegax.slowmo.mixin;
+package io.themegax.slowmo.mixin;
 
+import io.themegax.slowmo.ext.PlayerEntityExt;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.themegax.slowmo.ext.PlayerEntityExt;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static net.themegax.slowmo.SlowmoMain.TICKS_PER_SECOND;
+import static io.themegax.slowmo.SlowmoMain.TICKS_PER_SECOND;
 
 @Mixin(ServerPlayNetworkHandler.class)
 public abstract class ServerPlayNetworkHandlerMixin {

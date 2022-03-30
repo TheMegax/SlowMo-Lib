@@ -1,4 +1,4 @@
-package net.themegax.slowmo.mixin.client;
+package io.themegax.slowmo.mixin.client;
 
 import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.entity.LivingEntity;
@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import static net.themegax.slowmo.SlowmoClient.playerTickCounter;
+import static io.themegax.slowmo.SlowmoClient.playerTickCounter;
 
 @Mixin(LivingEntityRenderer.class)
 public abstract class LivingEntityRendererMixin <T extends LivingEntity>{

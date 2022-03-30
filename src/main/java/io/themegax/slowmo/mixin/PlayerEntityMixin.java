@@ -1,14 +1,14 @@
-package net.themegax.slowmo.mixin;
+package io.themegax.slowmo.mixin;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
-import net.themegax.slowmo.ext.PlayerEntityExt;
+import io.themegax.slowmo.ext.PlayerEntityExt;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static net.themegax.slowmo.SlowmoMain.DEFAULT_TICKRATE;
+import static io.themegax.slowmo.SlowmoMain.DEFAULT_TICKRATE;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin implements PlayerEntityExt {
@@ -28,6 +28,8 @@ public abstract class PlayerEntityMixin implements PlayerEntityExt {
 
     @Inject(method = "readCustomDataFromNbt", at = @At("RETURN"))
     private void readCustomDataFromNbt(NbtCompound nbt, CallbackInfo ci) {
-        this.PLAYER_TICKS_PER_SECOND = nbt.getFloat("playerTicksPerSecond");
+        if (nbt.contains("playerTicksPerSecond")) {
+            this.PLAYER_TICKS_PER_SECOND = nbt.getFloat("playerTicksPerSecond");
+        }
     }
 }

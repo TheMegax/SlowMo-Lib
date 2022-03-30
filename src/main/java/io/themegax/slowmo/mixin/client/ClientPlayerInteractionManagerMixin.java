@@ -1,8 +1,7 @@
-package net.themegax.slowmo.mixin.client;
+package io.themegax.slowmo.mixin.client;
 
+import io.themegax.slowmo.ext.ClientPlayerInteractionManagerExt;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
-import net.themegax.slowmo.SlowmoMain;
-import net.themegax.slowmo.ext.ClientPlayerInteractionManagerExt;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

@@ -1,5 +1,8 @@
 {
-  "command.slowmo.reset": "Reset all ticks",
-  "command.slowmo.changed_ticks": "Changed tickspeed",
+  "command.slowmo.reset": "Reset tickrate to default (20 TPS)",
+  "command.slowmo.changed_ticks": "Changed %s tickrate to %d TPS",
+  "command.slowmo.server": "server",
+  "command.slowmo.client": "client(s)",
+  "command.slowmo.all": "everyone's",
   "gamerule.worldTickspeed": "World Tick Speed"
 }

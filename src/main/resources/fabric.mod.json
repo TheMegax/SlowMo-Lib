@@ -19,10 +19,10 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.themegax.slowmo.SlowmoMain"
+      "io.themegax.slowmo.SlowmoMain"
     ],
     "client": [
-      "net.themegax.slowmo.SlowmoClient"
+      "io.themegax.slowmo.SlowmoClient"
     ]
   },
   "mixins": [

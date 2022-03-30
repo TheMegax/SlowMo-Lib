@@ -1,4 +1,4 @@
-package net.themegax.slowmo.mixin.client;
+package io.themegax.slowmo.mixin.client;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.GameRenderer;

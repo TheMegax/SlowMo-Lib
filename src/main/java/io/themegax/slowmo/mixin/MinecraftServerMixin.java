@@ -1,11 +1,11 @@
-package net.themegax.slowmo.mixin;
+package io.themegax.slowmo.mixin;
 
 import net.minecraft.server.MinecraftServer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
-import static net.themegax.slowmo.SlowmoMain.MILLISECONDS_PER_TICK;
+import static io.themegax.slowmo.SlowmoMain.MILLISECONDS_PER_TICK;
 
 @Mixin(MinecraftServer.class)
 public abstract class MinecraftServerMixin {

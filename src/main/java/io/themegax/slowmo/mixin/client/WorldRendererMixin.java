@@ -1,4 +1,4 @@
-package net.themegax.slowmo.mixin.client;
+package io.themegax.slowmo.mixin.client;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static net.themegax.slowmo.SlowmoClient.playerTickCounter;
+import static io.themegax.slowmo.SlowmoClient.playerTickCounter;
 
 @Mixin(WorldRenderer.class)
 public abstract class WorldRendererMixin {

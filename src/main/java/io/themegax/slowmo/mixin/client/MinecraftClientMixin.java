@@ -1,19 +1,23 @@
-package net.themegax.slowmo.mixin.client;
+package io.themegax.slowmo.mixin.client;
 
+import io.themegax.slowmo.ext.SoundSystemExt;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.sound.SoundManager;
+import net.minecraft.client.sound.SoundSystem;
 import net.minecraft.util.Util;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static net.themegax.slowmo.ClientTick.renderTick;
-import static net.themegax.slowmo.SlowmoClient.MAX_CLIENT_TICKS;
-import static net.themegax.slowmo.SlowmoClient.playerTickCounter;
+import static io.themegax.slowmo.ClientTick.renderTick;
+import static io.themegax.slowmo.SlowmoClient.*;
 
 @Mixin(MinecraftClient.class)
 public abstract class MinecraftClientMixin {
+
+    float soundPitch = 1f;
 
     @ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/GameRenderer;render(FJZ)V"))
     private float tickDelta(float f) {
@@ -58,7 +62,30 @@ public abstract class MinecraftClientMixin {
 
         if (client.player != null) {
             MinecraftClientAccessor minecraftClientAccessor = ((MinecraftClientAccessor) client);
-            minecraftClientAccessor.invokeHandleInputEvents(); // Fixes input at very low tickrate
+            minecraftClientAccessor.invokeHandleInputEvents(); // Fixes inputs at very low tickrates
+
+            if (CHANGE_SOUND && (soundPitch != SERVER_TICKS_PER_SECOND/20)) {
+                float pitchDelta = (float) i/40;
+                float pitchDistance = Math.abs(SERVER_TICKS_PER_SECOND/20 - soundPitch);
+
+                if (soundPitch < SERVER_TICKS_PER_SECOND/20) {
+                    soundPitch += pitchDelta;
+                }
+                else {
+                    soundPitch -= pitchDelta;
+                }
+
+                if (pitchDistance < pitchDelta) {
+                    soundPitch = SERVER_TICKS_PER_SECOND/20;
+                }
+
+                SoundManager clientSoundManager = client.getSoundManager();
+                SoundManagerAccessor managerAccessor = ((SoundManagerAccessor)clientSoundManager);
+
+                SoundSystem soundSystem = managerAccessor.getSoundSystem();
+
+                ((SoundSystemExt)(soundSystem)).updateSoundPitch(soundPitch);
+            }
         }
         if (!client.isPaused()) {
             for (int j = 0; j < Math.min(MAX_CLIENT_TICKS, i); ++j) {
