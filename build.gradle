@@ -74,7 +74,7 @@ loom {
 	accessWidenerPath = file("src/main/resources/slowmo.accesswidener")
 }
 
-ossrhUsername = null
+ext["ossrhPassword"] = ''
 
 File secretPropsFile = project.rootProject.file('keys.properties')
 if (secretPropsFile.exists()) {
@@ -88,7 +88,9 @@ if (secretPropsFile.exists()) {
 }
 
 signing {
-	sign publishing.publications
+	if (ossrhPassword != null) {
+		sign publishing.publications
+	}
 }
 
 publishing {
@@ -126,7 +128,7 @@ publishing {
 	}
 
 	repositories {
-		if (ossrhUsername != null) {
+		if (ossrhPassword != null) {
 			maven {
 				url "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
 				credentials {
