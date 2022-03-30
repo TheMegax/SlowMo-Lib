@@ -1,4 +1,4 @@
-package io.themegax.slowmo.mixin;
+package io.themegax.slowmo.mixin.common;
 
 import io.themegax.slowmo.ext.PlayerEntityExt;
 import net.minecraft.server.network.ServerPlayNetworkHandler;

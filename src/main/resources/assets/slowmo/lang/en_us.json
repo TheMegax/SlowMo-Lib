@@ -4,5 +4,9 @@
   "command.slowmo.server": "server",
   "command.slowmo.client": "client(s)",
   "command.slowmo.all": "everyone's",
-  "gamerule.worldTickspeed": "World Tick Speed"
+  "gamerule.worldTickspeed": "World Tick Speed",
+  "config.slowmo.permissionLevel" : "Command permission level",
+  "config.slowmo.maxClientTicks" : "Max render ticks per frame",
+  "config.slowmo.tickrateCommands" : "Allow tickrate commands (requires restart)",
+  "config.slowmo.changeSound" : "Should tickrate change pitch"
 }

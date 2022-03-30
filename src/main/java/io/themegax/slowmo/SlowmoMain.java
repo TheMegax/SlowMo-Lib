@@ -37,7 +37,6 @@ public class SlowmoMain implements ModInitializer {
 	public static final float MIN_TICKRATE = 0.1f;
 	public static final float MAX_TICKRATE = 1000;
 
-
 	public static int PERMISSION_LEVEL = 2;
 
 	public static final GameRules.Key<DoubleRule> WORLD_TICK_SPEED =
@@ -47,16 +46,18 @@ public class SlowmoMain implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		CommandRegistry.init();
+		new SlowmoConfig(modID).load();
+
+		if (SlowmoConfig.tickrateCommands) {
+			PERMISSION_LEVEL = SlowmoConfig.getPermissionLevel();
+			CommandRegistry.init();
+		}
 		ServerTickEvents.END_SERVER_TICK.register(this::onServerTick);
 		ServerEntityEvents.ENTITY_LOAD.register(this::onEntityLoad);
 
 		//TODO LIST:
 		// - Better client tick desync handling in ClientTick
 		// - Client particle spawning smoothing
-		// - Fix particles not using correct tick delta
-		// - Config file
-		// - Fix pitch only affecting client sounds
 		// - Fix item cooldown inconsistency on low server tickrates
 		// - Effect duration timer should follow server
 		// - Fix thrown potions not rendering when too close

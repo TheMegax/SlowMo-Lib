@@ -39,6 +39,8 @@ public abstract class WorldRendererMixin {
 
     @ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/particle/ParticleManager;renderParticles(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider$Immediate;Lnet/minecraft/client/render/LightmapTextureManager;Lnet/minecraft/client/render/Camera;F)V"))
     private float tickDelta(float f) {
-        return playerTickCounter.tickDelta;
+        MinecraftClient client = MinecraftClient.getInstance();
+        float pausedTickDelta = ((MinecraftClientAccessor) client).getPausedTickDelta();
+        return (client.isPaused() ? pausedTickDelta : playerTickCounter.tickDelta);
     }
 }

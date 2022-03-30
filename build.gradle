@@ -4,6 +4,19 @@ plugins {
 	id 'signing'
 }
 
+repositories {
+	maven {
+		url 'https://jitpack.io'
+	}
+	maven {
+		url "https://maven.terraformersmc.com/"
+	}
+	maven {
+		url "https://maven.shedaniel.me/"
+	}
+}
+
+
 sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
 
@@ -15,10 +28,14 @@ group = project.maven_group
 def targetJavaVersion = 17
 
 dependencies {
+	implementation 'org.projectlombok:lombok:1.18.20'
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+	modImplementation "com.gitlab.Lortseam:completeconfig:${project.completeconfig_version}"
+	include "com.gitlab.Lortseam:completeconfig:${project.completeconfig_version}"
 }
 
 processResources {

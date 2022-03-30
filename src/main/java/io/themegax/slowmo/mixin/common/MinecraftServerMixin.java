@@ -1,4 +1,4 @@
-package io.themegax.slowmo.mixin;
+package io.themegax.slowmo.mixin.common;
 
 import net.minecraft.server.MinecraftServer;
 import org.spongepowered.asm.mixin.Mixin;

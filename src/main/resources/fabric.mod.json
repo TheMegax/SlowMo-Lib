@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "slowmo-lib",
+  "id": "slowmo",
   "version": "${version}",
 
   "name": "SlowMo Lib",

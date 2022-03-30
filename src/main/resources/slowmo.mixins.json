@@ -4,13 +4,12 @@
   "package": "io.themegax.slowmo.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "MinecraftServerMixin",
-    "PlayerEntityMixin",
-    "ServerPlayNetworkHandlerMixin",
-    "ServerWorldAccessor",
-    "ServerWorldMixin",
-    "WorldAccessor",
-    "client.SoundManagerAccessor"
+    "common.MinecraftServerMixin",
+    "common.PlayerEntityMixin",
+    "common.ServerPlayNetworkHandlerMixin",
+    "common.ServerWorldAccessor",
+    "common.ServerWorldMixin",
+    "common.WorldAccessor"
   ],
   "client": [
     "client.ClientPlayerInteractionManagerAccessor",
@@ -22,6 +21,7 @@
     "client.MinecraftClientMixin",
     "client.SoundSystemAccessor",
     "client.SoundSystemMixin",
+    "client.SoundManagerAccessor",
     "client.WorldRendererMixin"
   ],
   "injectors": {

@@ -1,14 +1,17 @@
 package io.themegax.slowmo;
 
 import io.themegax.slowmo.mixin.client.MinecraftClientAccessor;
+import me.lortseam.completeconfig.gui.ConfigScreenBuilder;
+import me.lortseam.completeconfig.gui.cloth.ClothConfigScreenBuilder;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderTickCounter;
 
-import static net.minecraft.util.math.MathHelper.clamp;
 import static io.themegax.slowmo.SlowmoMain.*;
+import static net.minecraft.util.math.MathHelper.clamp;
 
 public class SlowmoClient implements ClientModInitializer {
     public static RenderTickCounter playerTickCounter = new RenderTickCounter(20f, 0L);
@@ -16,12 +19,19 @@ public class SlowmoClient implements ClientModInitializer {
     public static float SERVER_TICKS_PER_SECOND = 20;
     public static int MAX_CLIENT_TICKS = 100;
     public static boolean CHANGE_SOUND = true;
+    public static float SOUND_PITCH = 1f;
 
     @Override
     public void onInitializeClient() {
         // This code uses access wideners to access tickTime
 
         ClientTickEvents.START_CLIENT_TICK.register(e -> this.onClientTick());
+
+        if (FabricLoader.getInstance().isModLoaded("cloth-config")) {
+            ConfigScreenBuilder.setMain(modID, new ClothConfigScreenBuilder());
+        }
+        CHANGE_SOUND = SlowmoConfig.changeSound;
+        MAX_CLIENT_TICKS = SlowmoConfig.getMaxClientTicks();
 
         ClientPlayNetworking.registerGlobalReceiver(
                 TICKRATE_PACKET_ID, (client, handler, buf, responseSender) -> {
@@ -45,6 +55,7 @@ public class SlowmoClient implements ClientModInitializer {
             CLIENT_TICKS_PER_SECOND = DEFAULT_TICKRATE;
             SERVER_TICKS_PER_SECOND = DEFAULT_TICKRATE;
         }
+        CHANGE_SOUND = SlowmoConfig.changeSound;
 
         RenderTickCounter renderTickCounter = ((MinecraftClientAccessor)client).getRenderTickCounter();
         renderTickCounter.tickTime = 1000F / SERVER_TICKS_PER_SECOND;

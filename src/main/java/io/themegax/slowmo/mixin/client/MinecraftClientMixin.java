@@ -17,8 +17,6 @@ import static io.themegax.slowmo.SlowmoClient.*;
 @Mixin(MinecraftClient.class)
 public abstract class MinecraftClientMixin {
 
-    float soundPitch = 1f;
-
     @ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/GameRenderer;render(FJZ)V"))
     private float tickDelta(float f) {
         MinecraftClient client = MinecraftClient.getInstance();
@@ -64,19 +62,19 @@ public abstract class MinecraftClientMixin {
             MinecraftClientAccessor minecraftClientAccessor = ((MinecraftClientAccessor) client);
             minecraftClientAccessor.invokeHandleInputEvents(); // Fixes inputs at very low tickrates
 
-            if (CHANGE_SOUND && (soundPitch != SERVER_TICKS_PER_SECOND/20)) {
-                float pitchDelta = (float) i/40;
-                float pitchDistance = Math.abs(SERVER_TICKS_PER_SECOND/20 - soundPitch);
+            if (CHANGE_SOUND && (SOUND_PITCH != SERVER_TICKS_PER_SECOND/20)) {
+                float pitchDelta = (float) i/20;
+                float pitchDistance = Math.abs(SERVER_TICKS_PER_SECOND/20 - SOUND_PITCH);
 
-                if (soundPitch < SERVER_TICKS_PER_SECOND/20) {
-                    soundPitch += pitchDelta;
+                if (SOUND_PITCH < SERVER_TICKS_PER_SECOND/20) {
+                    SOUND_PITCH += pitchDelta;
                 }
                 else {
-                    soundPitch -= pitchDelta;
+                    SOUND_PITCH -= pitchDelta;
                 }
 
                 if (pitchDistance < pitchDelta) {
-                    soundPitch = SERVER_TICKS_PER_SECOND/20;
+                    SOUND_PITCH = SERVER_TICKS_PER_SECOND/20;
                 }
 
                 SoundManager clientSoundManager = client.getSoundManager();
@@ -84,7 +82,7 @@ public abstract class MinecraftClientMixin {
 
                 SoundSystem soundSystem = managerAccessor.getSoundSystem();
 
-                ((SoundSystemExt)(soundSystem)).updateSoundPitch(soundPitch);
+                ((SoundSystemExt)(soundSystem)).updateSoundPitch(SOUND_PITCH);
             }
         }
         if (!client.isPaused()) {
