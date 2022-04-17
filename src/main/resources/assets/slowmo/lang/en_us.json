@@ -7,6 +7,9 @@
   "gamerule.worldTickspeed": "World Tick Speed",
   "config.slowmo.permissionLevel" : "Command permission level",
   "config.slowmo.maxClientTicks" : "Max render ticks per frame",
-  "config.slowmo.tickrateCommands" : "Allow tickrate commands (requires restart)",
-  "config.slowmo.changeSound" : "Should tickrate change pitch"
+  "config.slowmo.tickrateCommands" : "/tps command (requires restart)",
+  "config.slowmo.changeSound" : "Should tickrate change pitch",
+  "config.slowmo.doClampPitch" : "Should clamp pitch",
+  "config.slowmo.keepTickrateOnDeath" : "Should keep tickrate on death"
+
 }

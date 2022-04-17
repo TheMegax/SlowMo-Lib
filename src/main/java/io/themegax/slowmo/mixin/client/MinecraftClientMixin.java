@@ -60,7 +60,7 @@ public abstract class MinecraftClientMixin {
 
         if (client.player != null) {
             MinecraftClientAccessor minecraftClientAccessor = ((MinecraftClientAccessor) client);
-            minecraftClientAccessor.invokeHandleInputEvents(); // Fixes inputs at very low tickrates
+            minecraftClientAccessor.invokeHandleInputEvents(); // Fixes input at very low tickrates
 
             if (i != 0 && CHANGE_SOUND && (SOUND_PITCH != SERVER_TICKS_PER_SECOND/20)) {
                 float pitchDelta = (float) i/20;

@@ -56,14 +56,15 @@ public class SlowmoClient implements ClientModInitializer {
             SERVER_TICKS_PER_SECOND = DEFAULT_TICKRATE;
         }
         CHANGE_SOUND = SlowmoConfig.changeSound;
-
-        RenderTickCounter renderTickCounter = ((MinecraftClientAccessor)client).getRenderTickCounter();
-        renderTickCounter.tickTime = 1000F / SERVER_TICKS_PER_SECOND;
     }
 
-
     public static void updateServerTickrate(float f) {
-        SERVER_TICKS_PER_SECOND = f;
+        if (SERVER_TICKS_PER_SECOND != f) {
+            SERVER_TICKS_PER_SECOND = f;
+            MinecraftClient client = MinecraftClient.getInstance();
+            RenderTickCounter renderTickCounter = ((MinecraftClientAccessor)client).getRenderTickCounter();
+            renderTickCounter.tickTime = 1000F / SERVER_TICKS_PER_SECOND;
+        }
     }
 
     public static void updateClientTickrate(float f) {

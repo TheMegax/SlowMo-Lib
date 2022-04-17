@@ -1,6 +1,7 @@
 package io.themegax.slowmo;
 
 import io.themegax.slowmo.ext.PlayerEntityExt;
+import io.themegax.slowmo.mixin.common.MinecraftServerAccessor;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -16,6 +17,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Util;
 import net.minecraft.world.GameRules;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,10 +58,13 @@ public class SlowmoMain implements ModInitializer {
 		ServerEntityEvents.ENTITY_LOAD.register(this::onEntityLoad);
 
 		//TODO LIST:
+		// - Fabric API compatibility fix (Priority!)
+		// - Fix ridden entities glitchy camera (Priority!)
 		// - Better client tick desync handling in ClientTick
 		// - Client particle spawning smoothing
 		// - Fix item cooldown inconsistency on low server tickrates
-		// - Effect duration timer should follow server
+		// - Add mod image
+		// - Effect duration timer should follow server timer
 		// - Fix thrown potions not rendering when too close
 		// - Suggestion Provider
 
@@ -88,21 +93,27 @@ public class SlowmoMain implements ModInitializer {
 	public static void updateServerTickrate(float f, MinecraftServer minecraftServer) {
 		f = clamp(f, MIN_TICKRATE, MAX_TICKRATE);
 
-		MILLISECONDS_PER_TICK = (long) (1000/f);
-		TICKS_PER_SECOND = f;
+		if (TICKS_PER_SECOND != f) {
+			MILLISECONDS_PER_TICK = (long) (1000/f);
+			TICKS_PER_SECOND = f;
 
-		// Lazy, but practical
-		minecraftServer.getCommandManager().execute(
-				minecraftServer.getCommandSource(), "/gamerule worldTickspeed " + f);
+			((MinecraftServerAccessor)minecraftServer).setWaitingForNextTick(false);
+			((MinecraftServerAccessor)minecraftServer).setTimeReference(Util.getMeasuringTimeMs()-1);
+			((MinecraftServerAccessor)minecraftServer).setNextTickTimestamp(Util.getMeasuringTimeMs()+MILLISECONDS_PER_TICK);
 
-		PacketByteBuf buf = PacketByteBufs.create();
-		buf.writeFloat(f);
+			// Lazy, but practical
+			minecraftServer.getCommandManager().execute(
+					minecraftServer.getCommandSource(), "/gamerule worldTickspeed " + f);
 
-		for (ServerPlayerEntity player : PlayerLookup.all(minecraftServer)) {
-			ServerPlayNetworking.send(player, SERVER_TICKRATE_PACKET_ID, buf);
+			PacketByteBuf buf = PacketByteBufs.create();
+			buf.writeFloat(f);
+
+			for (ServerPlayerEntity player : PlayerLookup.all(minecraftServer)) {
+				ServerPlayNetworking.send(player, SERVER_TICKRATE_PACKET_ID, buf);
+			}
+
+			LOGGER.info("Updated server tickrate to {} TPS", f);
 		}
-
-		LOGGER.info("Updated server tickrate to {} TPS", f);
 	}
 
 	public static void updateClientTickrate(float f, ServerPlayerEntity player) {

@@ -17,7 +17,11 @@ public final class SlowmoConfig extends Config implements ConfigContainer {
 
     public static boolean tickrateCommands = true;
 
+    public static boolean doClampPitch = true;
+
     public static boolean changeSound = true;
+
+    public static boolean keepTickrateOnDeath = true;
 
     public static int getPermissionLevel() {
         return permissionLevel;

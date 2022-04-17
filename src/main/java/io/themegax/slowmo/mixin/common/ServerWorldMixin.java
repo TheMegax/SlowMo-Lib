@@ -23,6 +23,8 @@ import static io.themegax.slowmo.SlowmoMain.TICKS_PER_SECOND;
 
 @Mixin(ServerWorld.class)
 public abstract class ServerWorldMixin extends World {
+    float oddTicks = 0f;
+
     protected ServerWorldMixin(MutableWorldProperties properties, RegistryKey<World> registryRef, RegistryEntry<DimensionType> registryEntry, Supplier<Profiler> profiler, boolean isClient, boolean debugWorld, long seed) {
         super(properties, registryRef, registryEntry, profiler, isClient, debugWorld, seed);
     }
@@ -40,11 +42,13 @@ public abstract class ServerWorldMixin extends World {
             if (entity instanceof PlayerEntity) {
                 float PLAYER_TICKS_PER_SECOND = ((PlayerEntityExt)entity).getPlayerTicks();
 
-                //Notice: Some odd tick loops will be ignored by rounding
-                int tickLoops = (int) (PLAYER_TICKS_PER_SECOND/TICKS_PER_SECOND);
-                for (int i = 0; i < tickLoops; i++) {
+                float tickSpeed = (PLAYER_TICKS_PER_SECOND/TICKS_PER_SECOND);
+                int tickLoops = (int) tickSpeed;
+                oddTicks += tickSpeed - tickLoops;
+                for (int i = 0; i < tickLoops + (int) oddTicks; i++) {
                     tickPlayerAsync(entity);
                 }
+                return;
             }
 
             if (entity.isRemoved()) {
@@ -97,6 +101,5 @@ public abstract class ServerWorldMixin extends World {
             }
         }
         serverWorld.tickEntity(serverWorld::tickEntity, entity);
-        entity.baseTick();
     }
 }

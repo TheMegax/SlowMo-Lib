@@ -1,5 +1,6 @@
 package io.themegax.slowmo.mixin.client;
 
+import io.themegax.slowmo.SlowmoConfig;
 import io.themegax.slowmo.ext.SoundSystemExt;
 import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.client.sound.SoundSystem;
@@ -13,6 +14,7 @@ import static io.themegax.slowmo.SlowmoClient.SOUND_PITCH;
 
 @Mixin(SoundSystem.class)
 public abstract class SoundSystemMixin implements SoundSystemExt {
+    SoundSystem soundSystem = ((SoundSystem)(Object)this);
     public void updateSoundPitch(float pitch) {
         SoundSystem soundSystem = ((SoundSystem)(Object)this);
         SoundSystemAccessor accessor = ((SoundSystemAccessor)(soundSystem));
@@ -27,12 +29,15 @@ public abstract class SoundSystemMixin implements SoundSystemExt {
     }
 
     private float getAdjustedNewPitch(float pitch) {
-        return MathHelper.clamp(pitch, 0.3f, 3f);
+        if (SlowmoConfig.doClampPitch) {
+            return MathHelper.clamp(pitch, 0.3f, 3f);
+        }
+        else return pitch;
     }
 
     @Inject(method = "getAdjustedPitch", at = @At("HEAD"), cancellable = true)
     private void getAdjustedPitch(SoundInstance sound, CallbackInfoReturnable<Float> cir) {
-        if (!sound.getId().getPath().contains("ui")) {
+        if (!sound.getId().getPath().contains("ui.")) {
             float pitch = sound.getPitch() * SOUND_PITCH;
             cir.setReturnValue(getAdjustedNewPitch(pitch));
         }

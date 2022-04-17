@@ -3,7 +3,7 @@
 A Minecraft Fabric library to control time!
 
 ## Setup
-Gradle Setup:
+Put this on build.gradle
 ```groovy
 repositories {
     mavenCentral()
@@ -22,11 +22,15 @@ repositories {
 
 dependencies {
     (...)
-    modImplementation "io.github.themegax:SlowMo-Lib:${project.slowmolib_version}"
-    include "io.github.themegax:SlowMo-Lib:${project.slowmolib_version}"
+    modImplementation "io.github.themegax:SlowMo-Lib:${project.slowmolib_version}" // Required
+    include "io.github.themegax:SlowMo-Lib:${project.slowmolib_version}" //Optional jar-in-jar
 }
-
-You can find the version number {here}
 ```
 
-## How to Use
+You can find the version number {here}
+
+## How to use the API
+
+```groovy
+
+```
