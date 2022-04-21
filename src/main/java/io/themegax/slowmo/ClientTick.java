@@ -72,7 +72,7 @@ public class ClientTick {
             }
         }
 
-        if (clientPlayer != null && !client.isPaused()) {
+        if (clientPlayer != null && !client.isPaused() && !clientPlayer.hasVehicle()) {
             clientPlayer.resetPosition();
             clientPlayer.age++;
             clientPlayer.tick();

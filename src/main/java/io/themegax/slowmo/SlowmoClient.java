@@ -69,8 +69,10 @@ public class SlowmoClient implements ClientModInitializer {
 
     public static void updateClientTickrate(float f) {
         f = clamp(f, MIN_TICKRATE, MAX_TICKRATE);
-        playerTickCounter.tickTime = 1000F / f;
-        CLIENT_TICKS_PER_SECOND = f;
-        LOGGER.info("Updated client tickrate to {} TPS", f);
+        if (CLIENT_TICKS_PER_SECOND != f) {
+            playerTickCounter.tickTime = 1000F / f;
+            CLIENT_TICKS_PER_SECOND = f;
+            LOGGER.info("Updated client tickrate to {} TPS", f);
+        }
     }
 }
