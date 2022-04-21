@@ -56,6 +56,7 @@ public class SlowmoClient implements ClientModInitializer {
             SERVER_TICKS_PER_SECOND = DEFAULT_TICKRATE;
         }
         CHANGE_SOUND = SlowmoConfig.changeSound;
+        LOGGER.info("a");
     }
 
     public static void updateServerTickrate(float f) {

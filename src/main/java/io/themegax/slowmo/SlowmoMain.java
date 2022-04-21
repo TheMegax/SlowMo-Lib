@@ -58,12 +58,9 @@ public class SlowmoMain implements ModInitializer {
 		ServerEntityEvents.ENTITY_LOAD.register(this::onEntityLoad);
 
 		//TODO LIST:
-		// - Fabric API compatibility fix (Priority!)
 		// - Fix ridden entities glitchy camera (Priority!)
-		// - Better client tick desync handling in ClientTick
 		// - Client particle spawning smoothing
 		// - Fix item cooldown inconsistency on low server tickrates
-		// - Effect duration timer should follow server timer
 		// - Fix thrown potions not rendering when too close
 		// - Suggestion Provider
 

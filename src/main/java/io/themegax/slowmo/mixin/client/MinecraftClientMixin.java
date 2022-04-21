@@ -1,5 +1,6 @@
 package io.themegax.slowmo.mixin.client;
 
+import io.themegax.slowmo.ClientTick;
 import io.themegax.slowmo.ext.SoundSystemExt;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.particle.ParticleManager;
@@ -26,29 +27,9 @@ public abstract class MinecraftClientMixin {
         return playerTickCounter.tickDelta;
     }
 
-    @Redirect(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;handleInputEvents()V"))
-    private void ignoreInputCall(MinecraftClient instance) { } // Ignores handleInputEvents call from tick
-
-    @Redirect(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/GameRenderer;tick()V"))
-    private void ignoreGameRendererTick(GameRenderer instance) { } // Ignores GameRenderer.tick call from tick
-
-    @Redirect(method = "handleInputEvents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;handleBlockBreaking(Z)V"))
-    private void ignoreBlockBreakingHandler(MinecraftClient instance, boolean bl) { } // Ignores handleBlockBreaking call from handleInputEvents
-
-    @Redirect(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/particle/ParticleManager;tick()V"))
-    private void ignoreParticleManagerTick(ParticleManager instance) {} // Ignores particleManager.tick call from tick
-
-    @Inject(method = "tick", at = @At("HEAD"))
-    private void cooldownModify(CallbackInfo ci) { // Nullifies cooldown tickdown from tick() call
-        MinecraftClient client = MinecraftClient.getInstance();
-        int itemUseCooldown = ((MinecraftClientAccessor) client).getItemUseCooldown();
-        if (itemUseCooldown > 0) {
-            ((MinecraftClientAccessor) client).setItemUseCooldown(itemUseCooldown + 1);
-        }
-        int attackCooldown = ((MinecraftClientAccessor) client).getAttackCooldown();
-        if (attackCooldown > 0) {
-            ((MinecraftClientAccessor) client).setAttackCooldown(attackCooldown + 1);
-        }
+    @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;tick()V"))
+    private void redirectTick(MinecraftClient client) {
+        ClientTick.gameTick(client);
     }
 
     // Player tick render
