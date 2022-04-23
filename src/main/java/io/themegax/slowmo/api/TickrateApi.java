@@ -9,6 +9,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import static io.themegax.slowmo.SlowmoMain.updateClientTickrate;
 import static io.themegax.slowmo.SlowmoMain.updateServerTickrate;
 
+@SuppressWarnings("unused")
 public class TickrateApi {
     public static void setPlayerTickrate(float tps, PlayerEntity player) {
         updateClientTickrate(tps, (ServerPlayerEntity) player);

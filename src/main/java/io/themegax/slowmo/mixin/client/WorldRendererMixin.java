@@ -20,7 +20,7 @@ import static io.themegax.slowmo.SlowmoClient.playerTickCounter;
 public abstract class WorldRendererMixin {
     @Inject(method = "renderEntity", at = @At("HEAD"), cancellable = true)
     private void renderEntity(Entity entity, double cameraX, double cameraY, double cameraZ, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, CallbackInfo ci) {
-        if (entity instanceof PlayerEntity) {
+        if (entity instanceof PlayerEntity && !MinecraftClient.getInstance().isPaused()) {
             // Players use playerTickCounter's tickDelta to render instead of server tickDelta
             renderEntityMixin(entity, cameraX, cameraY, cameraZ, playerTickCounter.tickDelta, matrices, vertexConsumers);
             ci.cancel();

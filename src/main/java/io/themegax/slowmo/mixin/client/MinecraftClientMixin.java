@@ -3,8 +3,6 @@ package io.themegax.slowmo.mixin.client;
 import io.themegax.slowmo.ClientTick;
 import io.themegax.slowmo.ext.SoundSystemExt;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.particle.ParticleManager;
-import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.sound.SoundManager;
 import net.minecraft.client.sound.SoundSystem;
 import net.minecraft.util.Util;
@@ -83,5 +81,8 @@ public abstract class MinecraftClientMixin {
     private int tickLimit(int i) {
         return MAX_CLIENT_TICKS;
     }
+
+    @Redirect(method = "handleInputEvents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;handleBlockBreaking(Z)V"))
+    private void ignoreBlockBreakingHandler(MinecraftClient instance, boolean bl) { } // Ignores handleBlockBreaking call from handleInputEvents
 
 }

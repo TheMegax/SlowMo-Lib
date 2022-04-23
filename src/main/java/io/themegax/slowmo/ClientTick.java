@@ -11,7 +11,6 @@ import net.minecraft.client.gui.screen.DeathScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.SleepingChatScreen;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.toast.TutorialToast;
 import net.minecraft.client.tutorial.TutorialManager;
 import net.minecraft.text.Text;
@@ -20,8 +19,8 @@ import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
 import net.minecraft.util.crash.CrashReportSection;
 import net.minecraft.util.profiler.Profiler;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+// This class reeplaces MinecraftClient's "tick()" function
 @Environment(EnvType.CLIENT)
 public class ClientTick {
     public static void gameTick(MinecraftClient client) {
@@ -36,11 +35,6 @@ public class ClientTick {
         profiler.push("gameMode");
         if (!client.isPaused() && client.world != null) {
             client.interactionManager.tick();
-        }
-
-        profiler.swap("textures");
-        if (client.world != null) {
-            client.getTextureManager().tick();
         }
 
         if (client.currentScreen == null && client.player != null) {
@@ -81,11 +75,6 @@ public class ClientTick {
             client.gameRenderer.disableShader();
         }
 
-        if (!client.isPaused()) {
-            client.getMusicTracker().tick();
-        }
-
-        client.getSoundManager().tick(client.isPaused());
         if (client.world != null) {
             if (!client.isPaused()) {
                 if (!client.options.joinedFirstServer && isConnectedToServer(client)) {
@@ -124,9 +113,6 @@ public class ClientTick {
             profiler.swap("pendingConnection");
             minecraftClientAccessor.getIntegratedServerConnection().tick();
         }
-
-        profiler.swap("keyboard");
-        client.keyboard.pollDebugCrash();
         profiler.pop();
     }
     public static void renderTick(MinecraftClient client) {
@@ -141,9 +127,6 @@ public class ClientTick {
             ((MinecraftClientAccessor) client).setItemUseCooldown(itemUseCooldown - 1);
         }
 
-        profiler.push("gui");
-        client.inGameHud.tick(false);
-        profiler.pop();
         client.gameRenderer.updateTargetedEntity(1.0f);
         client.getTutorialManager().tick(client.world, client.crosshairTarget);
         profiler.push("gameMode");
@@ -182,10 +165,6 @@ public class ClientTick {
                 ScreenEvents.afterTick(currentScreen).invoker().afterTick(currentScreen);
 
             }, "Ticking screen", client.currentScreen.getClass().getCanonicalName());
-        }
-
-        if (!client.options.debugEnabled) {
-            client.inGameHud.resetDebugHudChunk();
         }
 
         if (minecraftClientAccessor.getOverlay() == null && (client.currentScreen == null || client.currentScreen.passEvents)) {

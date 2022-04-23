@@ -13,8 +13,8 @@ public abstract class ClientWorldMixin {
 
     @Inject(method = "tickEntity", at = @At("HEAD"), cancellable = true)
     private void tickEntity(Entity entity, CallbackInfo ci) {
+        // Client players won't use the normal tick entity loop (see "ClientTick$renderTick()")
         if (entity instanceof PlayerEntity) {
-            // Client players won't use the normal tick entity loop
             ci.cancel();
         }
     }

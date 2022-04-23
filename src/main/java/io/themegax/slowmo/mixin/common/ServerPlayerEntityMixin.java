@@ -12,10 +12,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class ServerPlayerEntityMixin {
     @Inject(method = "copyFrom", at = @At("RETURN"))
     public void copyFrom(ServerPlayerEntity oldPlayer, boolean alive, CallbackInfo ci) {
+        ServerPlayerEntity serverPlayer = ((ServerPlayerEntity)(Object)this);
         if(SlowmoConfig.keepTickrateOnDeath) {
-            ServerPlayerEntity serverPlayer = ((ServerPlayerEntity)(Object)this);
             float PLAYER_TICKS_PER_SECOND = ((PlayerEntityExt)oldPlayer).getPlayerTicks();
             ((PlayerEntityExt)serverPlayer).setPlayerTicks(PLAYER_TICKS_PER_SECOND);
         }
+        float TICK_DELTA = ((PlayerEntityExt)oldPlayer).getTickDelta();
+        ((PlayerEntityExt)serverPlayer).setTickDelta(TICK_DELTA);
     }
 }

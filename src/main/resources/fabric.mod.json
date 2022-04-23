@@ -4,7 +4,7 @@
   "version": "${version}",
 
   "name": "SlowMo Lib",
-  "description": "Library for controlling time",
+  "description": "Library for controlling time.",
   "authors": [
     "TheMegax"
   ],
