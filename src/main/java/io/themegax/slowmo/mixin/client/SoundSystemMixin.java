@@ -10,13 +10,13 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import static io.themegax.slowmo.SlowmoClient.CHANGE_SOUND;
 import static io.themegax.slowmo.SlowmoClient.SOUND_PITCH;
 
 @Mixin(SoundSystem.class)
 public abstract class SoundSystemMixin implements SoundSystemExt {
     SoundSystem soundSystem = ((SoundSystem)(Object)this);
     public void updateSoundPitch(float pitch) {
-        SoundSystem soundSystem = ((SoundSystem)(Object)this);
         SoundSystemAccessor accessor = ((SoundSystemAccessor)(soundSystem));
 
         if (!accessor.getStarted()) {
@@ -37,8 +37,9 @@ public abstract class SoundSystemMixin implements SoundSystemExt {
 
     @Inject(method = "getAdjustedPitch", at = @At("HEAD"), cancellable = true)
     private void getAdjustedPitch(SoundInstance sound, CallbackInfoReturnable<Float> cir) {
+        float pitchMod = CHANGE_SOUND ? SlowmoConfig.getPitchPercentage() : SOUND_PITCH;
         if (!sound.getId().getPath().contains("ui.")) {
-            float pitch = sound.getPitch() * SOUND_PITCH;
+            float pitch = sound.getPitch() * SOUND_PITCH * pitchMod;
             cir.setReturnValue(getAdjustedNewPitch(pitch));
         }
     }

@@ -20,17 +20,13 @@ import net.minecraft.util.crash.CrashReport;
 import net.minecraft.util.crash.CrashReportSection;
 import net.minecraft.util.profiler.Profiler;
 
-// This class reeplaces MinecraftClient's "tick()" function
+// This class replaces MinecraftClient's "tick()" function
 @Environment(EnvType.CLIENT)
 public class ClientTick {
-    public static void gameTick(MinecraftClient client) {
+    public static void gameTick(MinecraftClient client) { // Represents one game tick (server speed)
         Profiler profiler = client.getProfiler();
         MinecraftClientAccessor minecraftClientAccessor = ((MinecraftClientAccessor) client);
-        
-        profiler.push("gui");
-        client.inGameHud.tick(client.isPaused());
-        profiler.pop();
-        client.gameRenderer.updateTargetedEntity(1.0F);
+
         client.getTutorialManager().tick(client.world, client.crosshairTarget);
         profiler.push("gameMode");
         if (!client.isPaused() && client.world != null) {
@@ -51,10 +47,6 @@ public class ClientTick {
                     sleepingChatScreen.closeChatIfEmpty();
                 }
             }
-        }
-
-        if (!client.options.debugEnabled) {
-            client.inGameHud.resetDebugHudChunk();
         }
 
         if (client.world != null) {
@@ -115,12 +107,16 @@ public class ClientTick {
         }
         profiler.pop();
     }
-    public static void renderTick(MinecraftClient client) {
+    public static void renderTick(MinecraftClient client) { // Represents one player tick (client speed)
         ClientTickEvents.START_CLIENT_TICK.invoker().onStartTick(client);
 
         Profiler profiler = client.getProfiler();
         ClientPlayerEntity clientPlayer = client.player;
         MinecraftClientAccessor minecraftClientAccessor = ((MinecraftClientAccessor) client);
+
+        profiler.push("gui");
+        client.inGameHud.tick(client.isPaused());
+        profiler.pop();
 
         int itemUseCooldown = ((MinecraftClientAccessor) client).getItemUseCooldown();
         if (itemUseCooldown > 0) {
@@ -153,6 +149,11 @@ public class ClientTick {
                 }
             }
         }
+
+        if (!client.options.debugEnabled) {
+            client.inGameHud.resetDebugHudChunk();
+        }
+
         if (client.currentScreen != null) {
             ((MinecraftClientAccessor) client).setAttackCooldown(1000);
         }
@@ -176,10 +177,12 @@ public class ClientTick {
             }
         }
 
-        if (clientPlayer != null && !client.isPaused() && !clientPlayer.hasVehicle()) {
+        if (clientPlayer != null && !client.isPaused()) {
             clientPlayer.resetPosition();
-            clientPlayer.age++;
-            clientPlayer.tick();
+            if (!clientPlayer.hasVehicle()) {
+                clientPlayer.age++;
+                clientPlayer.tick();
+            }
         }
 
         if (client.world != null) {

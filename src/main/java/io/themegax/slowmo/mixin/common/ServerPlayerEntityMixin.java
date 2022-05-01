@@ -19,5 +19,8 @@ public abstract class ServerPlayerEntityMixin {
         }
         float TICK_DELTA = ((PlayerEntityExt)oldPlayer).getTickDelta();
         ((PlayerEntityExt)serverPlayer).setTickDelta(TICK_DELTA);
+
+        float ODD_TICKS = ((PlayerEntityExt)oldPlayer).getOddTicks();
+        ((PlayerEntityExt)serverPlayer).setOddTicks(ODD_TICKS);
     }
 }

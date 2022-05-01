@@ -18,7 +18,6 @@
     "client.ClientPlayerInteractionManagerMixin",
     "client.ClientWorldMixin",
     "client.GameRendererMixin",
-    "client.LivingEntityRendererMixin",
     "client.MinecraftClientAccessor",
     "client.MinecraftClientMixin",
     "client.SoundManagerAccessor",

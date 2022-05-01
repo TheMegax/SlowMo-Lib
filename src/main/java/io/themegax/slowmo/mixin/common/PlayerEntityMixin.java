@@ -14,19 +14,28 @@ import static io.themegax.slowmo.SlowmoMain.DEFAULT_TICKRATE;
 public abstract class PlayerEntityMixin implements PlayerEntityExt {
     private float PLAYER_TICKS_PER_SECOND = DEFAULT_TICKRATE;
     private float TICK_DELTA = 0f;
+    private float ODD_TICKS = 0f;
 
     public float getPlayerTicks() {
         return PLAYER_TICKS_PER_SECOND;
     }
     public void setPlayerTicks(float playerTicks) {
-        PLAYER_TICKS_PER_SECOND = playerTicks;
+        this.PLAYER_TICKS_PER_SECOND = playerTicks;
     }
 
     public float getTickDelta() {
         return TICK_DELTA;
     }
     public void setTickDelta(float tickDelta) {
-        TICK_DELTA = tickDelta;
+        this.TICK_DELTA = tickDelta;
+    }
+
+    public float getOddTicks() {
+        return ODD_TICKS;
+    }
+
+    public void setOddTicks(float oddTicks) {
+        this.ODD_TICKS = oddTicks;
     }
 
     @Inject(method = "writeCustomDataToNbt", at = @At("RETURN"))
@@ -37,6 +46,9 @@ public abstract class PlayerEntityMixin implements PlayerEntityExt {
 
     @Inject(method = "readCustomDataFromNbt", at = @At("RETURN"))
     private void readCustomDataFromNbt(NbtCompound nbt, CallbackInfo ci) {
+        if (nbt.contains("playerTicksPerSecond")) {
+            this.PLAYER_TICKS_PER_SECOND = nbt.getFloat("playerTicksPerSecond");
+        }
         if (nbt.contains("tickDelta")) {
             this.TICK_DELTA = nbt.getFloat("tickDelta");
         }

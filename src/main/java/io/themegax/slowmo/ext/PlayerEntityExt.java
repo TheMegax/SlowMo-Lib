@@ -5,4 +5,6 @@ public interface PlayerEntityExt {
     void setPlayerTicks(float playerTicks);
     float getTickDelta();
     void setTickDelta(float tickDelta);
+    float getOddTicks();
+    void setOddTicks(float tickDelta);
 }

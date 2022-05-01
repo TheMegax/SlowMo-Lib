@@ -11,15 +11,19 @@ public final class SlowmoConfig extends Config implements ConfigContainer {
     @ConfigEntry.Slider
     private static int permissionLevel = 2;
 
-    @ConfigEntry.BoundedInteger(min = 20, max = 1000)
+    @ConfigEntry.BoundedInteger(min = 10, max = 1000)
     @ConfigEntry.Slider
     private static int maxClientTicks = 100;
 
     public static boolean tickrateCommands = true;
 
+    public static boolean changeSound = true;
+
     public static boolean doClampPitch = true;
 
-    public static boolean changeSound = true;
+    @ConfigEntry.BoundedInteger(min = 1, max = 200)
+    @ConfigEntry.Slider
+    private static float pitchPercentage = 100f;
 
     public static boolean keepTickrateOnDeath = true;
 
@@ -29,6 +33,10 @@ public final class SlowmoConfig extends Config implements ConfigContainer {
 
     public static int getMaxClientTicks() {
         return maxClientTicks;
+    }
+
+    public static float getPitchPercentage(){
+        return pitchPercentage/100;
     }
 
 

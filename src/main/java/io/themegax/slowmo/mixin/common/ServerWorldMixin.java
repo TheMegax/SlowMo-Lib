@@ -23,7 +23,6 @@ import static io.themegax.slowmo.SlowmoMain.TICKS_PER_SECOND;
 
 @Mixin(ServerWorld.class)
 public abstract class ServerWorldMixin extends World {
-    float oddTicks = 0f;
 
     protected ServerWorldMixin(MutableWorldProperties properties, RegistryKey<World> registryRef, RegistryEntry<DimensionType> registryEntry, Supplier<Profiler> profiler, boolean isClient, boolean debugWorld, long seed) {
         super(properties, registryRef, registryEntry, profiler, isClient, debugWorld, seed);
@@ -31,7 +30,7 @@ public abstract class ServerWorldMixin extends World {
 
     @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/EntityList;forEach(Ljava/util/function/Consumer;)V"), cancellable = true)
     private void tick(BooleanSupplier shouldKeepTicking, CallbackInfo ci) {
-        // Fixes block breaking speed. I couldn't figure out how to mixin into lambda foreach expresions
+        // Fixes block breaking speed. I couldn't figure out how to mixin into lambda foreach expressions
         ServerWorld serverWorld = ((ServerWorld)(Object)this);
         ServerWorldAccessor serverWorldAccessor = ((ServerWorldAccessor)(serverWorld));
         WorldAccessor worldAccessor = ((WorldAccessor)(serverWorld));
@@ -41,13 +40,18 @@ public abstract class ServerWorldMixin extends World {
         entityList.forEach(entity -> {
             if (entity instanceof PlayerEntity) {
                 float PLAYER_TICKS_PER_SECOND = ((PlayerEntityExt)entity).getPlayerTicks();
+                float ODD_TICKS = ((PlayerEntityExt)entity).getOddTicks();
 
                 float tickSpeed = (PLAYER_TICKS_PER_SECOND/TICKS_PER_SECOND);
-                int tickLoops = (int) tickSpeed;
-                oddTicks += tickSpeed - tickLoops;
-                for (int i = 0; i < tickLoops + (int) oddTicks; i++) {
+
+                ODD_TICKS += tickSpeed;
+                int tickLoops = (int) ODD_TICKS;
+                for (int i = 0; i < tickLoops; i++) {
                     tickPlayerAsync(entity);
                 }
+                ODD_TICKS -= tickLoops;
+
+                ((PlayerEntityExt)entity).setOddTicks(ODD_TICKS);
                 return;
             }
 
