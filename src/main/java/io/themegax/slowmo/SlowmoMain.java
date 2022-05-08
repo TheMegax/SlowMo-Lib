@@ -58,7 +58,6 @@ public class SlowmoMain implements ModInitializer {
 		ServerEntityEvents.ENTITY_LOAD.register(this::onEntityLoad);
 
 		//TODO LIST:
-		// - Fix ridden entities glitchy camera (Priority!)
 		// - Client particle spawning smoothing
 		// - Fix item cooldown inconsistency on low server tickrates
 		// - Fix thrown potions not rendering when too close

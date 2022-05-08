@@ -13,12 +13,14 @@ import net.minecraft.client.gui.screen.SleepingChatScreen;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.toast.TutorialToast;
 import net.minecraft.client.tutorial.TutorialManager;
+import net.minecraft.entity.Entity;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
 import net.minecraft.util.crash.CrashReportSection;
 import net.minecraft.util.profiler.Profiler;
+import net.minecraft.util.registry.Registry;
 
 // This class replaces MinecraftClient's "tick()" function
 @Environment(EnvType.CLIENT)
@@ -178,11 +180,7 @@ public class ClientTick {
         }
 
         if (clientPlayer != null && !client.isPaused()) {
-            clientPlayer.resetPosition();
-            if (!clientPlayer.hasVehicle()) {
-                clientPlayer.age++;
-                clientPlayer.tick();
-            }
+            tickEntity(clientPlayer);
         }
 
         if (client.world != null) {
@@ -205,5 +203,21 @@ public class ClientTick {
 
     private static boolean isConnectedToServer(MinecraftClient client) {
         return !client.isIntegratedServerRunning() || client.getServer() != null && client.getServer().isRemote();
+    }
+
+    public static void tickEntity(Entity entity) {
+        entity.resetPosition();
+        ++entity.age;
+        Profiler profiler = entity.world.getProfiler();
+        profiler.push(() -> Registry.ENTITY_TYPE.getId(entity.getType()).toString());
+
+        if (entity.hasVehicle()) {
+            entity.tickRiding();
+        }
+        else {
+            entity.tick();
+        }
+
+        profiler.pop();
     }
 }
