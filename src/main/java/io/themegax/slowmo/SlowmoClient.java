@@ -1,6 +1,10 @@
 package io.themegax.slowmo;
 
 import io.themegax.slowmo.mixin.client.MinecraftClientAccessor;
+import ladysnake.satin.api.event.ShaderEffectRenderCallback;
+import ladysnake.satin.api.managed.ManagedShaderEffect;
+import ladysnake.satin.api.managed.ShaderEffectManager;
+import ladysnake.satin.api.managed.uniform.Uniform1f;
 import me.lortseam.completeconfig.gui.ConfigScreenBuilder;
 import me.lortseam.completeconfig.gui.cloth.ClothConfigScreenBuilder;
 import net.fabricmc.api.ClientModInitializer;
@@ -9,17 +13,35 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderTickCounter;
+import net.minecraft.client.world.ClientWorld;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 
 import static io.themegax.slowmo.SlowmoMain.*;
 import static net.minecraft.util.math.MathHelper.clamp;
 
 public class SlowmoClient implements ClientModInitializer {
     public static RenderTickCounter playerTickCounter = new RenderTickCounter(20f, 0L);
-    public static float CLIENT_TICKS_PER_SECOND = 20;
-    public static float SERVER_TICKS_PER_SECOND = 20;
-    public static int MAX_CLIENT_TICKS = 100;
-    public static boolean CHANGE_SOUND = true;
-    public static float SOUND_PITCH = 1f;
+    public static float clientTicksPerSecond = 20;
+    public static float serverTicksPerSecond = 20;
+    public static int maxClientTicks = 100;
+    public static boolean changeSound = true;
+
+    public static float soundPitch = 1f;
+    private static float prevPitch = 1f;
+    private static float goalPitch = 1f;
+    private static float startingPitch = 1f;
+
+    private static float prevSaturation = 1f;
+    private static float goalSaturation = 1f;
+    private static float startingSaturation = 1f;
+
+    private static long startSat;
+    private static long startPit;
+
+    private static final ManagedShaderEffect SATURATION_SHADER = ShaderEffectManager.getInstance()
+            .manage(new Identifier(modID, "shaders/post/saturation.json"));
+    private final Uniform1f shaderSaturation = SATURATION_SHADER.findUniform1f("Saturation");
 
     @Override
     public void onInitializeClient() {
@@ -30,8 +52,8 @@ public class SlowmoClient implements ClientModInitializer {
         if (FabricLoader.getInstance().isModLoaded("cloth-config")) {
             ConfigScreenBuilder.setMain(modID, new ClothConfigScreenBuilder());
         }
-        CHANGE_SOUND = SlowmoConfig.changeSound;
-        MAX_CLIENT_TICKS = SlowmoConfig.getMaxClientTicks();
+        changeSound = SlowmoConfig.changeSound;
+        maxClientTicks = SlowmoConfig.getMaxClientTicks();
 
         ClientPlayNetworking.registerGlobalReceiver(
                 TICKRATE_PACKET_ID, (client, handler, buf, responseSender) -> {
@@ -44,34 +66,78 @@ public class SlowmoClient implements ClientModInitializer {
             float ticks = buf.readFloat();
             client.execute(() -> updateServerTickrate(ticks));
         });
+
+        ShaderEffectRenderCallback.EVENT.register(tickDelta -> {
+            if (SlowmoConfig.colorSaturation) {
+                shaderSaturation.set(MathHelper.clamp(getSaturationProgress(), 0.5f, 1.25f));
+                SATURATION_SHADER.render(tickDelta);
+            }
+            if (SlowmoConfig.changeSound) {
+                soundPitch = getSoundPitchProgress();
+            }
+        });
+    }
+
+    private float getSaturationProgress() {
+        float stepCount = Math.min(System.currentTimeMillis() - startSat, SlowmoConfig.getFadeTimeMillis()) / SlowmoConfig.getFadeTimeMillis();
+        if (startingSaturation < goalSaturation) {
+            return startingSaturation + stepCount*(goalSaturation - startingSaturation);
+        }
+        return startingSaturation - stepCount*(startingSaturation - goalSaturation);
+    }
+
+    private float getSoundPitchProgress() {
+        float stepCount = Math.min(System.currentTimeMillis() - startPit, SlowmoConfig.getFadeTimeMillis()) / SlowmoConfig.getFadeTimeMillis();
+        if (startingPitch < goalPitch) {
+            return startingPitch + stepCount*(goalPitch - startingPitch);
+        }
+        return startingPitch - stepCount*(startingPitch - goalPitch);
     }
 
     private void onClientTick() {
         MinecraftClient client = MinecraftClient.getInstance();
+        ClientWorld world = client.world;
+
         if (client.getServer() == null) {
             RenderTickCounter renderTickCounter = ((MinecraftClientAccessor)client).getRenderTickCounter();
             renderTickCounter.tickTime = 1000F / DEFAULT_TICKRATE;
             playerTickCounter.tickTime = 1000F / DEFAULT_TICKRATE;
-            CLIENT_TICKS_PER_SECOND = DEFAULT_TICKRATE;
-            SERVER_TICKS_PER_SECOND = DEFAULT_TICKRATE;
+            clientTicksPerSecond = DEFAULT_TICKRATE;
+            serverTicksPerSecond = DEFAULT_TICKRATE;
         }
-        CHANGE_SOUND = SlowmoConfig.changeSound;
+        changeSound = SlowmoConfig.changeSound;
+
+        goalSaturation = serverTicksPerSecond/DEFAULT_TICKRATE;
+        goalPitch = serverTicksPerSecond/DEFAULT_TICKRATE;
+
+        if (world != null && prevSaturation != goalSaturation) {
+            startSat = System.currentTimeMillis();
+            startingSaturation = prevSaturation;
+        }
+
+        if (prevPitch != goalPitch) {
+            startPit = System.currentTimeMillis();
+            startingPitch = prevPitch;
+        }
+
+        prevSaturation = goalSaturation;
+        prevPitch = goalPitch;
     }
 
     public static void updateServerTickrate(float f) {
-        if (SERVER_TICKS_PER_SECOND != f) {
-            SERVER_TICKS_PER_SECOND = f;
+        if (serverTicksPerSecond != f) {
+            serverTicksPerSecond = f;
             MinecraftClient client = MinecraftClient.getInstance();
             RenderTickCounter renderTickCounter = ((MinecraftClientAccessor)client).getRenderTickCounter();
-            renderTickCounter.tickTime = 1000F / SERVER_TICKS_PER_SECOND;
+            renderTickCounter.tickTime = 1000F / serverTicksPerSecond;
         }
     }
 
     public static void updateClientTickrate(float f) {
         f = clamp(f, MIN_TICKRATE, MAX_TICKRATE);
-        if (CLIENT_TICKS_PER_SECOND != f) {
+        if (clientTicksPerSecond != f) {
             playerTickCounter.tickTime = 1000F / f;
-            CLIENT_TICKS_PER_SECOND = f;
+            clientTicksPerSecond = f;
             LOGGER.info("Updated client tickrate to {} TPS", f);
         }
     }

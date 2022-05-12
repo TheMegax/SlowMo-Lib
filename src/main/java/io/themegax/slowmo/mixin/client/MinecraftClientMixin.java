@@ -41,36 +41,16 @@ public abstract class MinecraftClientMixin {
             MinecraftClientAccessor minecraftClientAccessor = ((MinecraftClientAccessor) client);
             minecraftClientAccessor.invokeHandleInputEvents(); // Fixes input at very low tickrates
 
-            if (i != 0 && CHANGE_SOUND && (SOUND_PITCH != SERVER_TICKS_PER_SECOND/20)) {
-                float pitchDelta = (float) i/20;
-                float pitchDistance = Math.abs(SERVER_TICKS_PER_SECOND/20 - SOUND_PITCH);
+            if (!changeSound) soundPitch = 1f;
 
-                if (SOUND_PITCH < SERVER_TICKS_PER_SECOND/20) {
-                    SOUND_PITCH += pitchDelta;
-                }
-                else {
-                    SOUND_PITCH -= pitchDelta;
-                }
+            SoundManager clientSoundManager = client.getSoundManager();
+            SoundManagerAccessor managerAccessor = ((SoundManagerAccessor)clientSoundManager);
+            SoundSystem soundSystem = managerAccessor.getSoundSystem();
+            ((SoundSystemExt)(soundSystem)).updateSoundPitch();
 
-                if (pitchDistance < pitchDelta) {
-                    SOUND_PITCH = SERVER_TICKS_PER_SECOND/20;
-                }
-
-                SoundManager clientSoundManager = client.getSoundManager();
-                SoundManagerAccessor managerAccessor = ((SoundManagerAccessor)clientSoundManager);
-                SoundSystem soundSystem = managerAccessor.getSoundSystem();
-                ((SoundSystemExt)(soundSystem)).updateSoundPitch(SOUND_PITCH);
-            }
-            else if (!CHANGE_SOUND) {
-                SOUND_PITCH = 1f;
-                SoundManager clientSoundManager = client.getSoundManager();
-                SoundManagerAccessor managerAccessor = ((SoundManagerAccessor)clientSoundManager);
-                SoundSystem soundSystem = managerAccessor.getSoundSystem();
-                ((SoundSystemExt)(soundSystem)).updateSoundPitch(SOUND_PITCH);
-            }
         }
         if (!client.isPaused()) {
-            for (int j = 0; j < Math.min(MAX_CLIENT_TICKS, i); ++j) {
+            for (int j = 0; j < Math.min(maxClientTicks, i); ++j) {
                 renderTick(client);
             }
         }
@@ -79,7 +59,7 @@ public abstract class MinecraftClientMixin {
     // Vanilla has a hard limit of 10 world ticks per render frame. This changes the limit to any number.
     @ModifyConstant(method = "render", constant = @Constant(intValue = 10))
     private int tickLimit(int i) {
-        return MAX_CLIENT_TICKS;
+        return maxClientTicks;
     }
 
     @Redirect(method = "handleInputEvents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;handleBlockBreaking(Z)V"))

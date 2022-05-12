@@ -14,6 +14,16 @@ repositories {
 	maven {
 		url "https://maven.shedaniel.me/"
 	}
+
+	maven {
+		name = 'Ladysnake Mods'
+		url = 'https://ladysnake.jfrog.io/artifactory/mods'
+		content {
+			includeGroup 'io.github.ladysnake'
+			includeGroupByRegex 'io\\.github\\.onyxstudios.*'
+		}
+	}
+
 }
 
 
@@ -35,6 +45,9 @@ dependencies {
 
 	modImplementation "com.gitlab.Lortseam:completeconfig:${project.completeconfig_version}"
 	include "com.gitlab.Lortseam:completeconfig:${project.completeconfig_version}"
+
+	modImplementation "io.github.ladysnake:satin:${satin_version}"
+	include "io.github.ladysnake:satin:${satin_version}"
 }
 
 processResources {

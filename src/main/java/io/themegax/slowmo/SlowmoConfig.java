@@ -5,6 +5,7 @@ import me.lortseam.completeconfig.api.ConfigEntries;
 import me.lortseam.completeconfig.api.ConfigEntry;
 import me.lortseam.completeconfig.data.Config;
 
+@SuppressWarnings("all")
 @ConfigEntries
 public final class SlowmoConfig extends Config implements ConfigContainer {
     @ConfigEntry.BoundedInteger(min = 0, max = 2)
@@ -21,9 +22,15 @@ public final class SlowmoConfig extends Config implements ConfigContainer {
 
     public static boolean doClampPitch = true;
 
-    @ConfigEntry.BoundedInteger(min = 1, max = 200)
+    @ConfigEntry.BoundedFloat(min = 1f, max = 200f)
     @ConfigEntry.Slider
-    private static float pitchPercentage = 100f;
+    private static float pitchPercentage = 50f;
+
+    public static boolean colorSaturation = true;
+
+    @ConfigEntry.BoundedFloat(min = 1f, max = 10000f)
+    @ConfigEntry.Slider
+    private static float fadeTimeMillis = 1000f;
 
     public static boolean keepTickrateOnDeath = true;
 
@@ -39,6 +46,9 @@ public final class SlowmoConfig extends Config implements ConfigContainer {
         return pitchPercentage/100;
     }
 
+    public static float getFadeTimeMillis() {
+        return fadeTimeMillis;
+    }
 
     public SlowmoConfig(String modId) {
         super(modId);

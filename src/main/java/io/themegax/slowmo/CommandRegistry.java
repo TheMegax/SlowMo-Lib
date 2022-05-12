@@ -48,7 +48,7 @@ public class CommandRegistry {
 
     public static LiteralCommandNode<ServerCommandSource> registerMain(CommandDispatcher<ServerCommandSource> dispatcher) {
         return dispatcher.register(literal("slowmo")
-                .requires(source -> source.hasPermissionLevel(PERMISSION_LEVEL))
+                .requires(source -> source.hasPermissionLevel(permissionLevel))
                 .then(literal("reset")
                         .executes(ctx -> {
                             for (ServerPlayerEntity player : PlayerLookup.all(ctx.getSource().getServer())) {

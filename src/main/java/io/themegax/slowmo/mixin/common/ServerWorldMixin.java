@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
-import static io.themegax.slowmo.SlowmoMain.TICKS_PER_SECOND;
+import static io.themegax.slowmo.SlowmoMain.ticksPerSecond;
 
 @Mixin(ServerWorld.class)
 public abstract class ServerWorldMixin extends World {
@@ -42,7 +42,7 @@ public abstract class ServerWorldMixin extends World {
                 float PLAYER_TICKS_PER_SECOND = ((PlayerEntityExt)entity).getPlayerTicks();
                 float ODD_TICKS = ((PlayerEntityExt)entity).getOddTicks();
 
-                float tickSpeed = (PLAYER_TICKS_PER_SECOND/TICKS_PER_SECOND);
+                float tickSpeed = (PLAYER_TICKS_PER_SECOND/ ticksPerSecond);
 
                 ODD_TICKS += tickSpeed;
                 int tickLoops = (int) ODD_TICKS;

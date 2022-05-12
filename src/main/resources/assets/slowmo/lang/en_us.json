@@ -11,5 +11,7 @@
   "config.slowmo.tickrateCommands" : "/tps command (requires restart)",
   "config.slowmo.changeSound" : "Should tickrate change pitch",
   "config.slowmo.doClampPitch" : "Should clamp pitch",
-  "config.slowmo.keepTickrateOnDeath" : "Should keep tickrate on death"
+  "config.slowmo.keepTickrateOnDeath" : "Should keep tickrate on death",
+  "config.slowmo.colorSaturation" : "Color saturation",
+  "config.slowmo.fadeTimeMillis" : "Fading time milliseconds"
 }

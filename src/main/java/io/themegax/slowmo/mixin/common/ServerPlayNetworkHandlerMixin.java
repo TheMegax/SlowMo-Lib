@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-import static io.themegax.slowmo.SlowmoMain.TICKS_PER_SECOND;
+import static io.themegax.slowmo.SlowmoMain.ticksPerSecond;
 
 @Mixin(ServerPlayNetworkHandler.class)
 public abstract class ServerPlayNetworkHandlerMixin {
@@ -17,7 +17,7 @@ public abstract class ServerPlayNetworkHandlerMixin {
         float PLAYER_TICKS_PER_SECOND = ((PlayerEntityExt) player).getPlayerTicks();
         float TICK_DELTA = ((PlayerEntityExt) player).getTickDelta();
 
-        float tickFloat = PLAYER_TICKS_PER_SECOND / TICKS_PER_SECOND;
+        float tickFloat = PLAYER_TICKS_PER_SECOND / ticksPerSecond;
 
         TICK_DELTA += tickFloat;
         int deltaInt = (int) TICK_DELTA;

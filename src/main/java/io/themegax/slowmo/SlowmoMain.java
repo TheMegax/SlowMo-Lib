@@ -32,14 +32,14 @@ public class SlowmoMain implements ModInitializer {
 	public static final Identifier SERVER_TICKRATE_PACKET_ID = new Identifier(modID, "server_tickrate_packet");
 
 	public static final float DEFAULT_TICKRATE = 20;
-	public static float TICKS_PER_SECOND = 20;
+	public static float ticksPerSecond = 20;
 
-	public static long MILLISECONDS_PER_TICK = 50L;
+	public static long millisecondsPerTick = 50L;
 
 	public static final float MIN_TICKRATE = 0.1f;
 	public static final float MAX_TICKRATE = 1000;
 
-	public static int PERMISSION_LEVEL = 2;
+	public static int permissionLevel = 2;
 
 	public static final GameRules.Key<DoubleRule> WORLD_TICK_SPEED =
 			GameRuleRegistry.register("worldTickspeed",
@@ -51,7 +51,7 @@ public class SlowmoMain implements ModInitializer {
 		new SlowmoConfig(modID).load();
 
 		if (SlowmoConfig.tickrateCommands) {
-			PERMISSION_LEVEL = SlowmoConfig.getPermissionLevel();
+			permissionLevel = SlowmoConfig.getPermissionLevel();
 			CommandRegistry.init();
 		}
 		ServerTickEvents.END_SERVER_TICK.register(this::onServerTick);
@@ -59,6 +59,7 @@ public class SlowmoMain implements ModInitializer {
 
 		//TODO LIST:
 		// - Client particle spawning smoothing
+		// - Sound modifier intensity fix
 		// - Fix item cooldown inconsistency on low server tickrates
 		// - Fix thrown potions not rendering when too close
 		// - Suggestion Provider
@@ -72,7 +73,7 @@ public class SlowmoMain implements ModInitializer {
 			updateClientTickrate(PLAYER_TICKS_PER_SECOND, (ServerPlayerEntity) entity);
 
 			PacketByteBuf buf = PacketByteBufs.create();
-			buf.writeFloat(TICKS_PER_SECOND);
+			buf.writeFloat(ticksPerSecond);
 			ServerPlayNetworking.send((ServerPlayerEntity) entity, SERVER_TICKRATE_PACKET_ID, buf);
 		}
 	}
@@ -80,7 +81,7 @@ public class SlowmoMain implements ModInitializer {
 
 	private void onServerTick(MinecraftServer server) {
 		float tickSpeedGamerule = (float) server.getGameRules().get(WORLD_TICK_SPEED).get();
-		if (tickSpeedGamerule != TICKS_PER_SECOND) {
+		if (tickSpeedGamerule != ticksPerSecond) {
 			updateServerTickrate(tickSpeedGamerule, server);
 		}
 	}
@@ -88,13 +89,13 @@ public class SlowmoMain implements ModInitializer {
 	public static void updateServerTickrate(float f, MinecraftServer minecraftServer) {
 		f = clamp(f, MIN_TICKRATE, MAX_TICKRATE);
 
-		if (TICKS_PER_SECOND != f) {
-			MILLISECONDS_PER_TICK = (long) (1000/f);
-			TICKS_PER_SECOND = f;
+		if (ticksPerSecond != f) {
+			millisecondsPerTick = (long) (1000/f);
+			ticksPerSecond = f;
 
 			((MinecraftServerAccessor)minecraftServer).setWaitingForNextTick(false);
 			((MinecraftServerAccessor)minecraftServer).setTimeReference(Util.getMeasuringTimeMs()-1);
-			((MinecraftServerAccessor)minecraftServer).setNextTickTimestamp(Util.getMeasuringTimeMs()+MILLISECONDS_PER_TICK);
+			((MinecraftServerAccessor)minecraftServer).setNextTickTimestamp(Util.getMeasuringTimeMs()+ millisecondsPerTick);
 
 			// Lazy, but practical
 			minecraftServer.getCommandManager().execute(
