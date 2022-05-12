@@ -1,4 +1,4 @@
-package io.themegax.slowmo.mixin.common;
+package io.themegax.slowmo.mixin.common.world;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.server.world.ServerChunkManager;

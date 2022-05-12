@@ -1,4 +1,4 @@
-package io.themegax.slowmo.mixin.client;
+package io.themegax.slowmo.mixin.client.world;
 
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;

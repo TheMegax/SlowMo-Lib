@@ -1,4 +1,4 @@
-package io.themegax.slowmo.mixin.common;
+package io.themegax.slowmo.mixin.common.player;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;

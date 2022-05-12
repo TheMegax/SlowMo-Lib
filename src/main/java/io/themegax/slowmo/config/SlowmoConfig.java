@@ -1,4 +1,4 @@
-package io.themegax.slowmo;
+package io.themegax.slowmo.config;
 
 import me.lortseam.completeconfig.api.ConfigContainer;
 import me.lortseam.completeconfig.api.ConfigEntries;

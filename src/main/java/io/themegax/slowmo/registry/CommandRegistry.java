@@ -1,4 +1,4 @@
-package io.themegax.slowmo;
+package io.themegax.slowmo.registry;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.FloatArgumentType;
@@ -21,8 +21,6 @@ public class CommandRegistry {
     static TranslatableText clientText = new TranslatableText("command.slowmo.client");
     static TranslatableText serverText = new TranslatableText("command.slowmo.server");
     static TranslatableText allText = new TranslatableText("command.slowmo.all");
-
-
 
     public static void init() {
 

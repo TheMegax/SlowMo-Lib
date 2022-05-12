@@ -1,5 +1,6 @@
-package io.themegax.slowmo.mixin.client;
+package io.themegax.slowmo.mixin.client.render;
 
+import io.themegax.slowmo.mixin.client.MinecraftClientAccessor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.GameRenderer;
 import org.spongepowered.asm.mixin.Mixin;

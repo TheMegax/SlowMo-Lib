@@ -6,24 +6,24 @@
   "mixins": [
     "common.MinecraftServerAccessor",
     "common.MinecraftServerMixin",
-    "common.PlayerEntityMixin",
-    "common.ServerPlayerEntityMixin",
-    "common.ServerPlayNetworkHandlerMixin",
-    "common.ServerWorldAccessor",
-    "common.ServerWorldMixin",
-    "common.WorldAccessor"
+    "common.player.PlayerEntityMixin",
+    "common.player.ServerPlayerEntityMixin",
+    "common.network.ServerPlayNetworkHandlerMixin",
+    "common.world.ServerWorldAccessor",
+    "common.world.ServerWorldMixin",
+    "common.world.WorldAccessor"
   ],
   "client": [
-    "client.ClientPlayerInteractionManagerAccessor",
-    "client.ClientPlayerInteractionManagerMixin",
-    "client.ClientWorldMixin",
-    "client.GameRendererMixin",
+    "client.network.ClientPlayerInteractionManagerAccessor",
+    "client.network.ClientPlayerInteractionManagerMixin",
+    "client.world.ClientWorldMixin",
+    "client.render.GameRendererMixin",
     "client.MinecraftClientAccessor",
     "client.MinecraftClientMixin",
-    "client.SoundManagerAccessor",
-    "client.SoundSystemAccessor",
-    "client.SoundSystemMixin",
-    "client.WorldRendererMixin"
+    "client.sound.SoundManagerAccessor",
+    "client.sound.SoundSystemAccessor",
+    "client.sound.SoundSystemMixin",
+    "client.render.WorldRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

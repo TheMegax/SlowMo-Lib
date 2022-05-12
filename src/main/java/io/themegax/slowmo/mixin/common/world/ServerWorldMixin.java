@@ -1,4 +1,4 @@
-package io.themegax.slowmo.mixin.common;
+package io.themegax.slowmo.mixin.common.world;
 
 import io.themegax.slowmo.ext.PlayerEntityExt;
 import net.minecraft.entity.Entity;

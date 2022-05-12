@@ -2,6 +2,7 @@ package io.themegax.slowmo.mixin.client;
 
 import io.themegax.slowmo.ClientTick;
 import io.themegax.slowmo.ext.SoundSystemExt;
+import io.themegax.slowmo.mixin.client.sound.SoundManagerAccessor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.SoundManager;
 import net.minecraft.client.sound.SoundSystem;

@@ -1,5 +1,6 @@
 package io.themegax.slowmo;
 
+import io.themegax.slowmo.config.SlowmoConfig;
 import io.themegax.slowmo.mixin.client.MinecraftClientAccessor;
 import ladysnake.satin.api.event.ShaderEffectRenderCallback;
 import ladysnake.satin.api.managed.ManagedShaderEffect;

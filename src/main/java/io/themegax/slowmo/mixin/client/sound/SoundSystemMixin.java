@@ -1,6 +1,6 @@
-package io.themegax.slowmo.mixin.client;
+package io.themegax.slowmo.mixin.client.sound;
 
-import io.themegax.slowmo.SlowmoConfig;
+import io.themegax.slowmo.config.SlowmoConfig;
 import io.themegax.slowmo.ext.SoundSystemExt;
 import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.client.sound.SoundSystem;

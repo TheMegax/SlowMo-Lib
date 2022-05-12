@@ -1,4 +1,4 @@
-package io.themegax.slowmo.mixin.client;
+package io.themegax.slowmo.mixin.client.network;
 
 import io.themegax.slowmo.ext.ClientPlayerInteractionManagerExt;
 import net.minecraft.client.network.ClientPlayerInteractionManager;

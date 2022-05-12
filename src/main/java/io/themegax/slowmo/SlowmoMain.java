@@ -1,7 +1,9 @@
 package io.themegax.slowmo;
 
+import io.themegax.slowmo.config.SlowmoConfig;
 import io.themegax.slowmo.ext.PlayerEntityExt;
 import io.themegax.slowmo.mixin.common.MinecraftServerAccessor;
+import io.themegax.slowmo.registry.CommandRegistry;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
