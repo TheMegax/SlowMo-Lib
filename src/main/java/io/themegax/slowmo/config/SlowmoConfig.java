@@ -22,7 +22,7 @@ public final class SlowmoConfig extends Config implements ConfigContainer {
 
     public static boolean doClampPitch = true;
 
-    @ConfigEntry.BoundedFloat(min = 1f, max = 200f)
+    @ConfigEntry.BoundedInteger(min = 1, max = 200)
     @ConfigEntry.Slider
     private static float pitchPercentage = 50f;
 
@@ -30,7 +30,7 @@ public final class SlowmoConfig extends Config implements ConfigContainer {
 
     @ConfigEntry.BoundedFloat(min = 1f, max = 10000f)
     @ConfigEntry.Slider
-    private static float fadeTimeMillis = 1000f;
+    private static float fadeTimeMillis = 2000f;
 
     public static boolean keepTickrateOnDeath = true;
 

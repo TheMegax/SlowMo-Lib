@@ -17,6 +17,7 @@ import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
+import org.slf4j.Logger;
 
 import static io.themegax.slowmo.SlowmoMain.*;
 import static net.minecraft.util.math.MathHelper.clamp;
@@ -41,7 +42,7 @@ public class SlowmoClient implements ClientModInitializer {
     private static long startPit;
 
     private static final ManagedShaderEffect SATURATION_SHADER = ShaderEffectManager.getInstance()
-            .manage(new Identifier(modID, "shaders/post/saturation.json"));
+            .manage(new Identifier(SlowmoMain.getModID(), "shaders/post/saturation.json"));
     private final Uniform1f shaderSaturation = SATURATION_SHADER.findUniform1f("Saturation");
 
     @Override
@@ -51,7 +52,7 @@ public class SlowmoClient implements ClientModInitializer {
         ClientTickEvents.START_CLIENT_TICK.register(e -> this.onClientTick());
 
         if (FabricLoader.getInstance().isModLoaded("cloth-config")) {
-            ConfigScreenBuilder.setMain(modID, new ClothConfigScreenBuilder());
+            ConfigScreenBuilder.setMain(SlowmoMain.getModID(), new ClothConfigScreenBuilder());
         }
         changeSound = SlowmoConfig.changeSound;
         maxClientTicks = SlowmoConfig.getMaxClientTicks();
@@ -70,7 +71,7 @@ public class SlowmoClient implements ClientModInitializer {
 
         ShaderEffectRenderCallback.EVENT.register(tickDelta -> {
             if (SlowmoConfig.colorSaturation) {
-                shaderSaturation.set(MathHelper.clamp(getSaturationProgress(), 0.5f, 1.25f));
+                shaderSaturation.set(getSaturationProgress());
                 SATURATION_SHADER.render(tickDelta);
             }
             if (SlowmoConfig.changeSound) {
@@ -108,8 +109,11 @@ public class SlowmoClient implements ClientModInitializer {
         }
         changeSound = SlowmoConfig.changeSound;
 
-        goalSaturation = serverTicksPerSecond/DEFAULT_TICKRATE;
-        goalPitch = serverTicksPerSecond/DEFAULT_TICKRATE;
+        goalSaturation = MathHelper.clamp(serverTicksPerSecond/DEFAULT_TICKRATE, 0.5f, 1.25f);
+        if (SlowmoConfig.doClampPitch) {
+            goalPitch = MathHelper.clamp(serverTicksPerSecond/DEFAULT_TICKRATE, 0.2f, 5f);
+        }
+        else goalPitch = serverTicksPerSecond/DEFAULT_TICKRATE;
 
         if (world != null && prevSaturation != goalSaturation) {
             startSat = System.currentTimeMillis();
@@ -139,6 +143,7 @@ public class SlowmoClient implements ClientModInitializer {
         if (clientTicksPerSecond != f) {
             playerTickCounter.tickTime = 1000F / f;
             clientTicksPerSecond = f;
+            Logger LOGGER = SlowmoMain.getLogger();
             LOGGER.info("Updated client tickrate to {} TPS", f);
         }
     }

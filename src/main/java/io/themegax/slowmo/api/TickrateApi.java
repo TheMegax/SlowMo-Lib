@@ -1,5 +1,6 @@
 package io.themegax.slowmo.api;
 
+import io.themegax.slowmo.SlowmoMain;
 import io.themegax.slowmo.ext.MinecraftServerExt;
 import io.themegax.slowmo.ext.PlayerEntityExt;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,5 +24,9 @@ public class TickrateApi {
     }
     public static float getServerTickrate(MinecraftServer server) {
         return ((MinecraftServerExt) server).getServerTickrate();
+    }
+
+    public static float getDefaultTickrate() {
+        return SlowmoMain.DEFAULT_TICKRATE;
     }
 }

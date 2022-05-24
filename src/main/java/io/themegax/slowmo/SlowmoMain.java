@@ -27,19 +27,18 @@ import org.slf4j.LoggerFactory;
 import static net.minecraft.util.math.MathHelper.clamp;
 
 public class SlowmoMain implements ModInitializer {
-	public static final Logger LOGGER = LoggerFactory.getLogger("SlowMo Lib");
+	private static final Logger LOGGER = LoggerFactory.getLogger("SlowMo Lib");
 
-	public static final String modID = "slowmo";
+	private static final String modID = "slowmo";
 	public static final Identifier TICKRATE_PACKET_ID = new Identifier(modID, "tickrate_packet");
 	public static final Identifier SERVER_TICKRATE_PACKET_ID = new Identifier(modID, "server_tickrate_packet");
 
 	public static final float DEFAULT_TICKRATE = 20;
-	public static float ticksPerSecond = 20;
-
-	public static long millisecondsPerTick = 50L;
-
 	public static final float MIN_TICKRATE = 0.1f;
 	public static final float MAX_TICKRATE = 1000;
+
+	public static float ticksPerSecond = 20;
+	public static long millisecondsPerTick = 50L;
 
 	public static int permissionLevel = 2;
 
@@ -61,12 +60,21 @@ public class SlowmoMain implements ModInitializer {
 
 		//TODO LIST:
 		// - Client particle spawning smoothing
+		// - Mount ride fix
 		// - Sound modifier intensity fix
 		// - Fix item cooldown inconsistency on low server tickrates
-		// - Fix thrown potions not rendering when too close
+		// - Fix thrown potions/arrows not rendering when too close
 		// - Suggestion Provider
 
 		LOGGER.info("SlowMo Lib Initialized");
+	}
+
+	public static String getModID() {
+		return modID;
+	}
+
+	public static Logger getLogger() {
+		return LOGGER;
 	}
 
 	private void onEntityLoad(Entity entity, ServerWorld serverWorld) {

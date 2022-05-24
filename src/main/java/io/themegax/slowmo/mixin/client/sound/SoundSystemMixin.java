@@ -4,7 +4,6 @@ import io.themegax.slowmo.config.SlowmoConfig;
 import io.themegax.slowmo.ext.SoundSystemExt;
 import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.client.sound.SoundSystem;
-import net.minecraft.util.math.MathHelper;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -29,18 +28,10 @@ public abstract class SoundSystemMixin implements SoundSystemExt {
         });
     }
 
-    private float getAdjustedNewPitch(float pitch) {
-        if (SlowmoConfig.doClampPitch) {
-            return MathHelper.clamp(pitch, 0.3f, 3f);
-        }
-        else return pitch;
-    }
-
     private float pitchModifierStrenght(SoundInstance sound) {
         float pitchMod = SlowmoConfig.getPitchPercentage();
         if (!sound.getId().getPath().contains("ui.")) {
-            float pitch = sound.getPitch() * (soundPitch / pitchMod);
-            return getAdjustedNewPitch(pitch);
+            return sound.getPitch() * (soundPitch / pitchMod);
         }
         return sound.getPitch();
     }
