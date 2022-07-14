@@ -15,7 +15,7 @@ import net.minecraft.client.toast.TutorialToast;
 import net.minecraft.client.tutorial.TutorialManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
 import net.minecraft.util.crash.CrashReportSection;
@@ -72,8 +72,8 @@ public class ClientTick {
         if (client.world != null) {
             if (!client.isPaused()) {
                 if (!client.options.joinedFirstServer && isConnectedToServer(client)) {
-                    Text text = new TranslatableText("tutorial.socialInteractions.title");
-                    Text text2 = new TranslatableText("tutorial.socialInteractions.description", new Object[]{TutorialManager.keyToText("socialInteractions")});
+                    Text text = Text.translatable("tutorial.socialInteractions.title");
+                    Text text2 = Text.translatable("tutorial.socialInteractions.description", TutorialManager.keyToText("socialInteractions"));
                     minecraftClientAccessor.setSocialInteractionsToast(new TutorialToast(net.minecraft.client.toast.TutorialToast.Type.SOCIAL_INTERACTIONS, text, text2, true));
                     client.getTutorialManager().add(minecraftClientAccessor.getSocialInteractionsToast(), 160);
                     client.options.joinedFirstServer = true;

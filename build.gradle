@@ -43,8 +43,11 @@ dependencies {
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-	modImplementation "com.gitlab.Lortseam:completeconfig:${project.completeconfig_version}"
-	include "com.gitlab.Lortseam:completeconfig:${project.completeconfig_version}"
+	modImplementation "com.gitlab.Lortseam.completeconfig:base:${project.completeconfig_version}"
+	include "com.gitlab.Lortseam.completeconfig:base:${project.completeconfig_version}"
+
+	modImplementation "com.gitlab.Lortseam.completeconfig:gui-cloth:${project.completeconfig_version}"
+	include "com.gitlab.Lortseam.completeconfig:gui-cloth:${project.completeconfig_version}"
 
 	modImplementation "io.github.ladysnake:satin:${satin_version}"
 	include "io.github.ladysnake:satin:${satin_version}"

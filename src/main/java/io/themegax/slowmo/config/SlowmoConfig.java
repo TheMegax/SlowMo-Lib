@@ -6,7 +6,7 @@ import me.lortseam.completeconfig.api.ConfigEntry;
 import me.lortseam.completeconfig.data.Config;
 
 @SuppressWarnings("all")
-@ConfigEntries
+@ConfigEntries(includeAll = true)
 public final class SlowmoConfig extends Config implements ConfigContainer {
     @ConfigEntry.BoundedInteger(min = 0, max = 2)
     @ConfigEntry.Slider

@@ -6,6 +6,7 @@ import io.themegax.slowmo.mixin.common.MinecraftServerAccessor;
 import io.themegax.slowmo.registry.CommandRegistry;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
@@ -58,13 +59,15 @@ public class SlowmoMain implements ModInitializer {
 		ServerTickEvents.END_SERVER_TICK.register(this::onServerTick);
 		ServerEntityEvents.ENTITY_LOAD.register(this::onEntityLoad);
 
+
+
 		//TODO LIST:
 		// - Client particle spawning smoothing
 		// - Mount ride fix
 		// - Sound modifier intensity fix
 		// - Fix item cooldown inconsistency on low server tickrates
 		// - Fix thrown potions/arrows not rendering when too close
-		// - Suggestion Provider
+		// - Command Suggestion Provider
 
 		LOGGER.info("SlowMo Lib Initialized");
 	}
@@ -88,11 +91,10 @@ public class SlowmoMain implements ModInitializer {
 		}
 	}
 
-
 	private void onServerTick(MinecraftServer server) {
-		float tickSpeedGamerule = (float) server.getGameRules().get(WORLD_TICK_SPEED).get();
+		double tickSpeedGamerule = server.getGameRules().get(WORLD_TICK_SPEED).get();
 		if (tickSpeedGamerule != ticksPerSecond) {
-			updateServerTickrate(tickSpeedGamerule, server);
+			updateServerTickrate((float) tickSpeedGamerule, server);
 		}
 	}
 
@@ -109,7 +111,7 @@ public class SlowmoMain implements ModInitializer {
 
 			// Lazy, but practical
 			minecraftServer.getCommandManager().execute(
-					minecraftServer.getCommandSource(), "/gamerule worldTickspeed " + f);
+					minecraftServer.getCommandSource(), "gamerule worldTickspeed " + (double) f);
 
 			PacketByteBuf buf = PacketByteBufs.create();
 			buf.writeFloat(f);
