@@ -24,13 +24,13 @@ public final class SlowmoConfig extends Config implements ConfigContainer {
 
     @ConfigEntry.BoundedInteger(min = 1, max = 200)
     @ConfigEntry.Slider
-    private static float pitchPercentage = 50f;
+    private static int pitchPercentage = 50;
 
     public static boolean colorSaturation = true;
 
-    @ConfigEntry.BoundedFloat(min = 1f, max = 10000f)
+    @ConfigEntry.BoundedInteger(min = 1, max = 10000)
     @ConfigEntry.Slider
-    private static float fadeTimeMillis = 2000f;
+    private static int fadeTimeMillis = 2000;
 
     public static boolean keepTickrateOnDeath = true;
 
@@ -43,7 +43,7 @@ public final class SlowmoConfig extends Config implements ConfigContainer {
     }
 
     public static float getPitchPercentage(){
-        return pitchPercentage/100;
+        return (float) pitchPercentage / 100f;
     }
 
     public static float getFadeTimeMillis() {

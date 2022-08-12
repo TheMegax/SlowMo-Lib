@@ -18,9 +18,9 @@ import static net.minecraft.server.command.CommandManager.literal;
 import static io.themegax.slowmo.SlowmoMain.*;
 
 public class CommandRegistry {
-    static TranslatableTextContent clientText = new TranslatableTextContent("command.slowmo.client");
-    static TranslatableTextContent serverText = new TranslatableTextContent("command.slowmo.server");
-    static TranslatableTextContent allText = new TranslatableTextContent("command.slowmo.all");
+    static Text clientText = Text.translatable("command.slowmo.client");
+    static Text serverText = Text.translatable("command.slowmo.server");
+    static Text allText = Text.translatable("command.slowmo.all");
 
     public static void init() {
 
