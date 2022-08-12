@@ -63,7 +63,7 @@ public class SlowmoMain implements ModInitializer {
 
 		//TODO LIST:
 		// - Client particle spawning smoothing
-		// - Mount ride fix
+		// - Mount ride fix (Priority!)
 		// - Sound modifier intensity fix
 		// - Fix item cooldown inconsistency on low server tickrates
 		// - Fix thrown potions/arrows not rendering when too close
