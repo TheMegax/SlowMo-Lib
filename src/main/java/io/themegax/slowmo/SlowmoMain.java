@@ -110,7 +110,7 @@ public class SlowmoMain implements ModInitializer {
 			((MinecraftServerAccessor)minecraftServer).setNextTickTimestamp(Util.getMeasuringTimeMs()+ millisecondsPerTick);
 
 			// Lazy, but practical
-			minecraftServer.getCommandManager().execute(
+			minecraftServer.getCommandManager().executeWithPrefix(
 					minecraftServer.getCommandSource(), "gamerule worldTickspeed " + (double) f);
 
 			PacketByteBuf buf = PacketByteBufs.create();
