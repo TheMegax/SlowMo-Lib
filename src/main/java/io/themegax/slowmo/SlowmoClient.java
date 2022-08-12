@@ -38,6 +38,12 @@ public class SlowmoClient implements ClientModInitializer {
     private static float goalSaturation = 1f;
     private static float startingSaturation = 1f;
 
+    private static final float MIN_SATURATION = 0.5f;
+    private static final float MAX_SATURATION = 1f;
+
+    private static final float MIN_PITCH = 0.2f;
+    private static final float MAX_PITCH = 5f;
+
     private static long startSat;
     private static long startPit;
 
@@ -96,6 +102,17 @@ public class SlowmoClient implements ClientModInitializer {
         return startingPitch - stepCount*(startingPitch - goalPitch);
     }
 
+    // Unused
+    private float smoothClamp(float value, float min, float max, float val_min, float val_max) {
+        value = MathHelper.clamp(value, val_min, val_max);
+
+        float offset_max = max - min;
+
+        float offset_val_max = val_max - val_min;
+
+        return value;
+    }
+
     private void onClientTick() {
         MinecraftClient client = MinecraftClient.getInstance();
         ClientWorld world = client.world;
@@ -109,9 +126,9 @@ public class SlowmoClient implements ClientModInitializer {
         }
         changeSound = SlowmoConfig.changeSound;
 
-        goalSaturation = MathHelper.clamp(serverTicksPerSecond/DEFAULT_TICKRATE, 0.5f, 1.25f);
+        goalSaturation = MathHelper.clamp(serverTicksPerSecond/DEFAULT_TICKRATE, MIN_SATURATION, MAX_SATURATION);
         if (SlowmoConfig.doClampPitch) {
-            goalPitch = MathHelper.clamp(serverTicksPerSecond/DEFAULT_TICKRATE, 0.2f, 5f);
+            goalPitch = MathHelper.clamp(serverTicksPerSecond/DEFAULT_TICKRATE, MIN_PITCH, MAX_PITCH);
         }
         else goalPitch = serverTicksPerSecond/DEFAULT_TICKRATE;
 
