@@ -49,6 +49,8 @@ dependencies {
 	modImplementation "com.gitlab.Lortseam.completeconfig:gui-cloth:${project.completeconfig_version}"
 	include "com.gitlab.Lortseam.completeconfig:gui-cloth:${project.completeconfig_version}"
 
+	modImplementation "com.terraformersmc:modmenu:4.0.5"
+
 	modImplementation "io.github.ladysnake:satin:${satin_version}"
 	include "io.github.ladysnake:satin:${satin_version}"
 }
@@ -109,7 +111,6 @@ signing {
 }
 
 publishing {
-	def ENV = System.getenv()
 	publications {
 		mavenJava(MavenPublication) {
 			from components.java
