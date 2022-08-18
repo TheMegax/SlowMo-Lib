@@ -15,7 +15,6 @@ import net.minecraft.client.toast.TutorialToast;
 import net.minecraft.client.tutorial.TutorialManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
 import net.minecraft.util.crash.CrashReportSection;
@@ -32,19 +31,21 @@ public class ClientTick {
         client.getTutorialManager().tick(client.world, client.crosshairTarget);
         profiler.push("gameMode");
         if (!client.isPaused() && client.world != null) {
-            client.interactionManager.tick();
+            if (client.interactionManager != null) {
+                client.interactionManager.tick();
+            }
         }
 
         if (client.currentScreen == null && client.player != null) {
             if (client.player.isDead() && !(client.currentScreen instanceof DeathScreen)) {
-                client.setScreen((Screen)null);
+                client.setScreen(null);
             } else if (client.player.isSleeping() && client.world != null) {
                 client.setScreen(new SleepingChatScreen());
             }
         } else {
             Screen var2 = client.currentScreen;
-            if (var2 instanceof SleepingChatScreen) {
-                SleepingChatScreen sleepingChatScreen = (SleepingChatScreen)var2;
+            if (var2 instanceof SleepingChatScreen sleepingChatScreen) {
+                assert client.player != null;
                 if (!client.player.isSleeping()) {
                     sleepingChatScreen.closeChatIfEmpty();
                 }
@@ -83,9 +84,7 @@ public class ClientTick {
                 client.getTutorialManager().tick();
 
                 try {
-                    client.world.tick(() -> {
-                        return true;
-                    });
+                    client.world.tick(() -> true);
                 } catch (Throwable var5) {
                     CrashReport crashReport = CrashReport.create(var5, "Exception in world tick");
                     if (client.world == null) {
@@ -101,6 +100,7 @@ public class ClientTick {
 
             profiler.swap("animateTick");
             if (!client.isPaused() && client.world != null) {
+                assert client.player != null;
                 client.world.doRandomBlockDisplayTicks(client.player.getBlockX(), client.player.getBlockY(), client.player.getBlockZ());
             }
         } else if (minecraftClientAccessor.getIntegratedServerConnection() != null) {

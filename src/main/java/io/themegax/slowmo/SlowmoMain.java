@@ -6,7 +6,6 @@ import io.themegax.slowmo.mixin.common.MinecraftServerAccessor;
 import io.themegax.slowmo.registry.CommandRegistry;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
@@ -60,11 +59,9 @@ public class SlowmoMain implements ModInitializer {
 		ServerEntityEvents.ENTITY_LOAD.register(this::onEntityLoad);
 
 
-
 		//TODO LIST:
 		// - Client particle spawning smoothing
 		// - Mount ride fix (Priority!)
-		// - Sound modifier intensity fix
 		// - Fix item cooldown inconsistency on low server tickrates
 		// - Fix thrown potions/arrows not rendering when too close
 		// - Command Suggestion Provider
@@ -109,9 +106,10 @@ public class SlowmoMain implements ModInitializer {
 			((MinecraftServerAccessor)minecraftServer).setTimeReference(Util.getMeasuringTimeMs()-1);
 			((MinecraftServerAccessor)minecraftServer).setNextTickTimestamp(Util.getMeasuringTimeMs()+ millisecondsPerTick);
 
-			// Lazy, but practical
-			minecraftServer.getCommandManager().executeWithPrefix(
-					minecraftServer.getCommandSource(), "gamerule worldTickspeed " + (double) f);
+			// Change WorldTickSpeed gamerule
+			GameRules gameRules = minecraftServer.getGameRules();
+			DoubleRule rule = gameRules.get(WORLD_TICK_SPEED);
+			rule.setValue(GameRuleFactory.createDoubleRule(f).createRule(), minecraftServer);
 
 			PacketByteBuf buf = PacketByteBufs.create();
 			buf.writeFloat(f);
