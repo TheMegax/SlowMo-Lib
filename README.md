@@ -40,7 +40,7 @@ dependencies {
 **`gradle.properties`**
 ```groovy
 # Dependencies
-	slowmolib_version = 1.0.5
+	slowmolib_version = 1.0.5+1.19
 ```
 
 You can find the latest version number on the shield on top of the page.
